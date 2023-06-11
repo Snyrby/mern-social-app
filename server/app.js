@@ -18,11 +18,12 @@ const connectDB = require("./db/connect");
 
 // Router
 const authRouter = require('./routes/authRoutes');
+const userRouter = require('./routes/userRoutes');
+const postRouter = require('./routes/postRoutes');
 
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
-
 
 // CONFIGURATIONS
 app.set('trust proxy', 1);
@@ -45,6 +46,8 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/posts', postRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

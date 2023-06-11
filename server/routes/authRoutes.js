@@ -3,7 +3,9 @@ const router = express.Router();
 
 const { authenticateUser } = require("../middleware/authentication");
 
-const { register } = require("../controllers/authController");
+const { register, login, logout } = require("../controllers/authController");
 
 router.post("/register", register); // chain base on use
+router.post("/login", login);
+router.delete("/logout", authenticateUser, logout);
 module.exports = router;
