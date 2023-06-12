@@ -17,10 +17,11 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
-    comments: {
-      type: Array,
+    comments: [{
+      type: mongoose.Types.ObjectId,
+      ref: "Comment",
       default: [],
-    },
+    }],
   },
   { timestamps: true }
 );

@@ -40,10 +40,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    friends: {
-      type: Array,
-      default: [],
-    },
+    friends: [{
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: true,
+    }],
     location: String,
     occupation: String,
     viewedProfile: {
