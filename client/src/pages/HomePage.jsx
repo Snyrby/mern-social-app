@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, useMediaQuery } from "@mui/material";
-import { Navbar } from "../components/";
+import { Navbar } from "../components";
 
 
 const HomePage = () => {
