@@ -1,8 +1,13 @@
 import React from 'react'
+import { Box, useMediaQuery } from "@mui/material";
+import Navbar from "../components";
+
 
 const HomePage = () => {
   return (
-    <div>homePage</div>
+    <Box>
+      <Navbar />
+    </Box>
   )
 }
 
