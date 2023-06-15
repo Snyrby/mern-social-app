@@ -16,6 +16,7 @@ import { setLogin } from "../state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "../style";
 import url from "../utils/url";
+import axios from 'axios';
 
 const registerSchema = yup.object().shape({
   firstName: yup
@@ -78,38 +79,32 @@ const Form = () => {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
-
-    const savedUserResponse = await fetch(
-      `${url}/api/v1/auth/register`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-    const savedUser = await savedUserResponse.json();
+    const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
+    // const savedUserResponse = await fetch(
+    //   `${url}/api/v1/auth/register`,
+    //   {
+    //     method: "POST",
+    //     body: formData,
+    //   }
+    // );
+    // const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
 
-    if (savedUser) {
+    if (data) {
       setPageType("login");
     }
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch(`${url}/api/v1/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          // token: loggedIn.token,
-        })
-      );
-      navigate("/home");
+    const { email, password } = values;
+    const loginUser = { email, password };
+    try {
+        const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
+        onSubmitProps.resetForm();
+        dispatch(setLogin({user:data.user}));
+        navigate("/home");
+    } catch (error) {
+        
     }
   };
 

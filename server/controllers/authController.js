@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Token = require("../models/Token");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
+const path = require('path');
 const {
   attachCookiesToResponse,
   createTokenUser,
@@ -18,7 +19,6 @@ const register = async (req, res) => {
     firstName,
     lastName,
     password,
-    picturePath,
     friends,
     location,
     occupation,
@@ -32,6 +32,22 @@ const register = async (req, res) => {
   const role = isFirstAccount ? "admin" : "user";
 
   const verificationToken = crypto.randomBytes(40).toString("hex");
+  if (!req.files) {
+    throw new CustomError.BadRequestError("No image has been uploaded");
+  }
+  const userImage = req.files.picture;
+  if (!userImage.mimetype.startsWith("image")) {
+    throw new CustomError.BadRequestError("Please upload an image");
+  }
+  const maxSize = 1024 * 1024 * 5;
+  if (userImage.size > maxSize) {
+    throw new CustomError.BadRequestError("Please upload an image smaller than 5MB");
+  }
+  const imagePathAbsolute = path.join(__dirname, "../../client/public/" + `${userImage.name}`);
+  console.log(imagePathAbsolute);
+  const imagePathRelative = `/client/public/${userImage.name}`;
+  console.log(imagePathRelative);
+  await userImage.mv(imagePathAbsolute);
   const user = await User.create({
     firstName,
     lastName,
@@ -41,7 +57,7 @@ const register = async (req, res) => {
     verificationToken,
     location,
     occupation,
-    picturePath,
+    picturePath: imagePathRelative,
     friends,
   });
   // const origin = "http://localhost:3000";
@@ -100,16 +116,16 @@ const login = async (req, res) => {
   let refreshToken = "";
   // check for existing token
   const existingToken = await Token.findOne({ user: user._id });
-  // if (existingToken) {
-  //   const { isValid } = existingToken;
-  //   if (!isValid) {
-  //     throw new CustomError.UnauthenticatedError("Invalid Credentials");
-  //   }
-  //   refreshToken = existingToken.refreshToken;
-  //   attachCookiesToResponse({ res, user: tokenUser, refreshToken });
-  //   res.status(StatusCodes.OK).json({ user: tokenUser });
-  //   return;
-  // }
+  if (existingToken) {
+    const { isValid } = existingToken;
+    if (!isValid) {
+      throw new CustomError.UnauthenticatedError("Invalid Credentials");
+    }
+    refreshToken = existingToken.refreshToken;
+    attachCookiesToResponse({ res, user: tokenUser, refreshToken });
+    res.status(StatusCodes.OK).json({ user: tokenUser });
+    return;
+  }
   refreshToken = crypto.randomBytes(40).toString("hex");
   const userAgent = req.headers["user-agent"];
   const ip = req.ip;

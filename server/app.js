@@ -1,6 +1,7 @@
 require('dotenv').config();
 require('express-async-errors');
 
+const path = require("path");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -25,6 +26,8 @@ const postRouter = require('./routes/postRoutes');
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
+const root = path.join(__dirname, "../");
+
 // CONFIGURATIONS
 app.set('trust proxy', 1);
 app.use(
@@ -45,12 +48,18 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
+// app.use(express.static(path.resolve(root, "./client/public")));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(root, "./client/public", "index.html"));
+// });
 
 
 // MONGOOSE SETUP
