@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
 import Dropzone from "react-dropzone";
-import FlexBetween from "../style";
+import { FlexBetween } from "../style";
 import url from "../utils/url";
 import axios from 'axios';
 
@@ -99,7 +99,7 @@ const Form = () => {
     const { email, password } = values;
     const loginUser = { email, password };
     try {
-        const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
+        const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser, {withCredentials: true});
         onSubmitProps.resetForm();
         dispatch(setLogin({user:data.user}));
         navigate("/home");

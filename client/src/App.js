@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -16,7 +17,15 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route exact path="/" element={<LoginPage />} />
-            <Route exact path="/home" element={<HomePage />} />
+            <Route
+              exact
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/profile/:userId" element={<ProfilePage />} />
           </Routes>
         </ThemeProvider>

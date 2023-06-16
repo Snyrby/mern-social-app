@@ -29,6 +29,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const root = path.join(__dirname, "../");
 
 // CONFIGURATIONS
+app.use(cors({ origin: true, credentials: true, exposedHeaders: ["set-cookie"] }));
 app.set('trust proxy', 1);
 app.use(
   rateLimiter({
@@ -37,7 +38,6 @@ app.use(
   })
 );
 app.use(helmet());
-app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
 app.use(express.json());
