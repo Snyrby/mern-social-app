@@ -6,8 +6,11 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import { CookiesProvider, useCookies } from "react-cookie"
 
 function App() {
+  const [accessCookies, setAccessCookie] = useCookies(["accessToken"]);
+  const [refreshCookies, setRefreshCookie] = useCookies(["refreshToken"]);
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return (
