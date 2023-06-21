@@ -44,7 +44,6 @@ const register = async (req, res) => {
     throw new CustomError.BadRequestError("Please upload an image smaller than 5MB");
   }
   const imagePathAbsolute = path.join(__dirname, "../../client/public/" + `${userImage.name}`);
-  const imagePathRelative = `/client/public/${userImage.name}`;
   await userImage.mv(imagePathAbsolute);
   const user = await User.create({
     firstName,
@@ -55,7 +54,7 @@ const register = async (req, res) => {
     verificationToken,
     location,
     occupation,
-    picturePath: imagePathRelative,
+    picturePath: userImage.name,
     friends,
   });
   // const origin = "http://localhost:3000";

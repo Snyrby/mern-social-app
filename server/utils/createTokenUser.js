@@ -7,6 +7,8 @@ const createTokenUser = (user) => {
     location: user.location,
     occupation: user.occupation,
     viewedProfile: user.viewedProfile,
+    picturePath: user.picturePath,
+    impressions: user.impressions,
   };
 };
 
