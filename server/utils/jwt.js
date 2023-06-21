@@ -19,12 +19,14 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
     secure: process.env.NODE_ENV === "production",
     signed: true,
     expires: new Date(Date.now() + oneDay),
+    sameSite: "none",
   });
   res.cookie("refreshToken", refreshTokenJWT, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     signed: true,
     expires: new Date(Date.now() + oneMonth),
+    sameSite: "none",
   });
 };
 // const attachSingleCookiesToResponse = ({ res, user }) => {

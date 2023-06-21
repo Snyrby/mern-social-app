@@ -1,11 +1,10 @@
 import { React, useMemo } from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import { HomePage, LoginPage, ProfilePage, ProtectedRoute } from "./pages";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
-import ProtectedRoute from "./pages/ProtectedRoute";
 import { CookiesProvider, useCookies } from "react-cookie"
 
 function App() {
@@ -20,6 +19,9 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route exact path="/" element={<LoginPage />} />
+            {/* <ProtectedRoute path="/home" exact>
+              <HomePage />
+            </ProtectedRoute> */}
             <Route
               exact
               path="/home"

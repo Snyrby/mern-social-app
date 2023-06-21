@@ -48,7 +48,7 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
-// app.use(express.static(path.resolve(root, "./client/public")));
+// app.use(express.static(path.resolve(root, "./client/build")));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
@@ -58,7 +58,7 @@ app.use(errorHandlerMiddleware);
 
 
 // app.get("*", (req, res) => {
-//   res.sendFile(path.resolve(root, "./client/public", "index.html"));
+//   res.sendFile(path.resolve(root, "./client/build", "index.html"));
 // });
 
 

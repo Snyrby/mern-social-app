@@ -99,7 +99,7 @@ const Form = () => {
     const { email, password } = values;
     const loginUser = { email, password };
     try {
-        const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser, {withCredentials: true});
+        const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
         onSubmitProps.resetForm();
         dispatch(setLogin({user:data.user}));
         navigate("/home");
