@@ -112,7 +112,7 @@ const UserInfo = ({ userId, picturePath }) => {
 
         <FlexBetween gap="1rem" mb="0.5rem">
           <FlexBetween gap="1rem">
-            <AiFillTwitterCircle />
+            <AiFillTwitterCircle size="2rem" />
             <Box>
               <Typography color={main} fontWeight="500">
                 Twitter
@@ -125,7 +125,7 @@ const UserInfo = ({ userId, picturePath }) => {
 
         <FlexBetween gap="1rem">
           <FlexBetween gap="1rem">
-            <AiFillLinkedin />
+            <AiFillLinkedin size="2rem" />
             <Box>
               <Typography color={main} fontWeight="500">
                 LinkedIn
