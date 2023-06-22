@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const postSchema = mongoose.Schema(
+const PostSchema = mongoose.Schema(
   {
     description: {
       type: String,
@@ -23,7 +23,14 @@ const postSchema = mongoose.Schema(
       default: [],
     }],
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-module.exports = mongoose.model("Post", postSchema);
+PostSchema.virtual("userInfo", {
+  ref: "User",
+  localField: "user",
+  foreignField: "_id",
+  justOne: false,
+})
+
+module.exports = mongoose.model("Post", PostSchema);

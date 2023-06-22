@@ -96,7 +96,7 @@ const Form = () => {
         dispatch(setLogin({user:data.user}));
         navigate("/home");
     } catch (error) {
-        
+        console.log(error);
     }
   };
 
