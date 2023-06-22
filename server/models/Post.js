@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const postSchema = mongoose.Schema(
   {
-    post: {
+    description: {
       type: String,
       required: [true, "Please provide a post"],
       maxlength: [1000, "Posts can not be more than 1000 characters"],

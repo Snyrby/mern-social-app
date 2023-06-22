@@ -5,24 +5,17 @@ const CustomError = require("../errors");
 
 const createPost = async (req, res) => {
   const { userId, description, picturePath } = req.body;
-  const user = await User.findById(userId);
-  if (!user) {
+  const isValidUser = await User.findOne({ _id: userId });
+  if (!isValidUser) {
     throw new CustomError.NotFoundError(`No user with id : ${userId}`);
   }
   const newPost = new Post({
     userId,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    location: user.location,
     description,
-    userPicturePath: user.picturePath,
     picturePath,
-    likes: {},
-    comments: [],
   });
-  await newPost.save();
-
-  const post = await Post.find();
+  req.body.user = req.user.userId;
+  const post = await Post.create(req.body);
   res.status(StatusCodes.CREATED).json(post);
 };
 

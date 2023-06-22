@@ -80,14 +80,6 @@ const Form = () => {
     }
     formData.append("picturePath", values.picture.name);
     const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
-    // const savedUserResponse = await fetch(
-    //   `${url}/api/v1/auth/register`,
-    //   {
-    //     method: "POST",
-    //     body: formData,
-    //   }
-    // );
-    // const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
 
     if (data) {
