@@ -44,7 +44,6 @@ const UserInfo = ({ userId, picturePath }) => {
     impressions,
     friends,
   } = user;
-  console.log(user);
   return (
     <WidgetWrapper>
       <FlexBetween
