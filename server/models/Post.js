@@ -31,6 +31,9 @@ PostSchema.virtual("userInfo", {
   localField: "user",
   foreignField: "_id",
   justOne: false,
+  options: {
+    select: "firstName lastName picturePath",
+  },
 })
 
 module.exports = mongoose.model("Post", PostSchema);
