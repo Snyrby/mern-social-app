@@ -14,5 +14,6 @@ const {
 router.route("/").get(getFeedPosts).post(createPost); // chain base on use
 // router.get("/:userId", authenticateUser, getUserPosts);
 router.get("/:userId", getUserPosts);
-router.patch("/:id/like", authenticateUser, likePost);
+// router.patch("/:id/like", authenticateUser, likePost);
+router.get("/like/:id", likePost);
 module.exports = router;

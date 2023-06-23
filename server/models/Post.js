@@ -12,28 +12,18 @@ const PostSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    picturePath: String,
-    likes: {
-      type: Map,
-      of: Boolean,
+    picturePath: {
+      type: String,
+      default: "",
     },
-    comments: [{
-      type: mongoose.Types.ObjectId,
-      ref: "Comment",
-      default: [],
+    likes: [{
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      default: "",
     }],
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true }
 );
 
-PostSchema.virtual("userInfo", {
-  ref: "User",
-  localField: "user",
-  foreignField: "_id",
-  justOne: false,
-  options: {
-    select: "firstName lastName picturePath",
-  },
-})
 
 module.exports = mongoose.model("Post", PostSchema);

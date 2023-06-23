@@ -6,7 +6,6 @@ const CustomError = require("../errors");
 const createPost = async (req, res) => {
   const { userId, description, picturePath } = req.body;
   const isValidUser = await User.findOne({ _id: userId });
-  console.log(isValidUser);
   if (!isValidUser) {
     throw new CustomError.NotFoundError(`No user with id : ${userId}`);
   }
@@ -23,13 +22,19 @@ const createPost = async (req, res) => {
 };
 
 const getFeedPosts = async (req, res) => {
-  const posts = await Post.find({}).populate("userInfo");
-  res.status(StatusCodes.OK).json(posts);
+  const posts = await Post.find({}).populate({
+    path: "user",
+    select: "firstName lastName picturePath"
+  });
+  res.status(StatusCodes.OK).json({posts});
 };
 
 const getUserPosts = async (req, res) => {
-  const { userId } = req.params;
-  const posts = await Post.find({ user: userId }).populate("userInfo");
+  const { id : user } = req.params;
+  const posts = await Post.find({ user }).populate({
+    path: "user",
+    select: "firstName lastName picturePath"
+  });
   if (!posts) {
     throw new CustomError.NotFoundError(
       `No posts found with the user id of ${userId}`
@@ -39,24 +44,28 @@ const getUserPosts = async (req, res) => {
 };
 
 const likePost = async (req, res) => {
-  const { id } = req.params;
+  const { id : postId } = req.params;
   const { userId } = req.body;
-  const post = await Post.findById(id);
-  const isLiked = post.likes.get(userId);
-
+  const post = await Post.findOne({_id: postId});
+  const isLiked = post.likes.includes(userId);
   if (isLiked) {
-    post.likes.delete(userId);
+    post.likes.pop(userId);
+    console.log("y");
   } else {
-    post.likes.set(userId, true);
+    post.likes.push(userId);
+    console.log("n");
   }
+  // const isLiked = Post.find({ likes: [userId] });
 
-  const updatedPost = await Post.findByIdAndUpdate(
-    id,
-    { likes: post.likes },
-    { new: true }
-  );
+  // if (isLiked) {
+  //   Post.likes.pop(userId);
+  // } else {
+  //   post.likes.push(userId);
+  // }
 
-  res.status(StatusCodes.OK).json(updatedPost);
+  res.status(StatusCodes.OK).json(post);
+
+  // res.status(StatusCodes.OK).json({ updatedPost, count: updatedPost.likes.length });
 };
 
 module.exports = {

@@ -21,6 +21,7 @@ const connectDB = require("./db/connect");
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
+const commentRouter = require('./routes/commentRoutes');
 
 // middleware
 const notFoundMiddleware = require("./middleware/not-found");
@@ -52,6 +53,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/comments', commentRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

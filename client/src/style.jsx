@@ -19,18 +19,18 @@ export const WidgetWrapper = styled(Box)(({ theme }) => ({
   borderRadius: "0.75rem",
 }));
 
-export const UserImage = ({ image, size="60px" }) => {
+export const UserImage = ({ image, size = "60px" }) => {
   return (
     <Box width={size} height={size}>
-      <img 
-      style={{ objectFit: "cover", borderRadius: "50%" }}
-      width={size}
-      height={size}
-      alt="user"
-      src={`./${image}`}
+      <img
+        style={{ objectFit: "cover", borderRadius: "50%" }}
+        width={size}
+        height={size}
+        alt="user"
+        src={`./${image}`}
       />
     </Box>
-  )
+  );
 };
 export const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
@@ -44,16 +44,18 @@ export const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
-  const isFriend = friends.find((friend) => friend._id === friendId);
+  // const isFriend = friends.find((friend) => friend._id === friendId);
 
   const patchFriend = async () => {
     try {
-      const { data } = await axios.patch(`${url}/api/v1/users/${userId}/${friendId}`);
+      const { data } = await axios.patch(
+        `${url}/api/v1/users/${userId}/${friendId}`
+      );
       dispatch(setFriends({ friends: data }));
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <FlexBetween>
@@ -87,11 +89,11 @@ export const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         onClick={() => patchFriend()}
         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
-        {isFriend ? (
+        {/* {isFriend ? (
           <PersonRemoveOutlined sx={{ color: primaryDark }} />
         ) : (
           <PersonAddOutlined sx={{ color: primaryDark }} />
-        )}
+        )} */}
       </IconButton>
     </FlexBetween>
   );

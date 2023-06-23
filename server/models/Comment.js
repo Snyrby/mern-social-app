@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const CommentSchema = new mongoose.Schema(
   {
-    comment: {
+      description: {
         type: String,
         required: [true, "Please provide a comment"],
         maxlength: 100,
@@ -18,3 +18,5 @@ const CommentSchema = new mongoose.Schema(
         required: true,
       },
   }, {timestamps: true});
+
+  module.exports = mongoose.model("Comment", CommentSchema);

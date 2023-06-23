@@ -44,6 +44,7 @@ const UserSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: true,
+      default: "",
     }],
     location: String,
     occupation: String,

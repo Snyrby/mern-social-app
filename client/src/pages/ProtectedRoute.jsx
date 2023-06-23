@@ -14,7 +14,6 @@ const ProtectedRoute = ({ children, ...rest }) => {
   //   FetchData();
   // }, []);
   const user = useSelector((state) => state.user);
-  console.log(user);
   if (!user) {
     return <Navigate to="/" />;
   }
