@@ -23,14 +23,19 @@ const createPost = async (req, res) => {
 };
 
 const getFeedPosts = async (req, res) => {
-  const posts = await Post.find({});
+  const posts = await Post.find({}).populate("userInfo");
   res.status(StatusCodes.OK).json(posts);
 };
 
 const getUserPosts = async (req, res) => {
   const { userId } = req.params;
   const posts = await Post.find({ user: userId }).populate("userInfo");
-  res.status(StatusCodes.OK).json(posts);
+  if (!posts) {
+    throw new CustomError.NotFoundError(
+      `No posts found with the user id of ${userId}`
+    );
+  }
+  res.status(StatusCodes.OK).json({posts});
 };
 
 const likePost = async (req, res) => {

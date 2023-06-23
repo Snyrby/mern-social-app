@@ -33,13 +33,15 @@ const AllPosts = ({ userId, isProfile = false }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
-      {posts.map(({
+      {/* {posts.map(({
         _id,
         user,
         comments, 
         picturePath,
         description,
         likes,
+        firstNam,
+
       }) => (<Post 
           key={_id}
           postId={_id}
@@ -49,7 +51,7 @@ const AllPosts = ({ userId, isProfile = false }) => {
           // description={}
           // likes={}
         />)
-      )}
+      )} */}
     </>
   );
 };

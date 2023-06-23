@@ -41,12 +41,12 @@ const getUserFriends = async (req, res) => {
 const addRemoveFriend = async (req, res) => {
   const { id, friendId } = req.params;
   const user = await User.findOne({ id }).select("-password");
-  const friend = await User.findOne({ friendId });
+  const friend = await User.findOne({ friendId }).select("-password");
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${id}`);
   }
   if (!friend) {
-    throw new CustomError.NotFoundError(`No friend with id : ${friendId}`);
+    throw new CustomError.NotFoundError(`No user with id : ${friendId}`);
   }
   if (user.friends.includes(friendId)) {
     user.friends = user.friends.filter((id) => id !== friendId);

@@ -1,5 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { Navbar } from "../components";
+import { AllPosts, Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { UserInfo, CreatePosts } from "../components";
 
@@ -24,6 +24,7 @@ const HomePage = () => {
           mt={isNonMobileScreens ? undefined : "2rem" }
         >
           <CreatePosts picturePath={picturePath} />
+          <AllPosts userId={userId} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
