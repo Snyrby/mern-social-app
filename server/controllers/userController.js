@@ -26,22 +26,18 @@ const showCurrentUser = async (req, res) => {
 };
 
 const getUserFriends = async (req, res) => {
-  const user = await User.findOne({ _id: req.params.id }).select("-password");
-  const friends = await Promise.all(
-    user.friends.map((_id) => User.findById(_id))
-  );
-  const formattedFriends = friends.map(
-    ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-      return { _id, firstName, lastName, occupation, location, picturePath };
-    }
-  );
-  res.status(StatusCodes.OK).json({ friends: formattedFriends });
+  const user = await User.findOne({ _id: req.params.id }).select("friends");
+  if (!user) {
+    throw new CustomError.NotFoundError(`No user with id : ${id}`);
+  }
+  const friendsList = user.friends;
+  res.status(StatusCodes.OK).json({ friends: friendsList });
 };
 
 const addRemoveFriend = async (req, res) => {
   const { id, friendId } = req.params;
-  const user = await User.findOne({ id }).select("-password");
-  const friend = await User.findOne({ friendId }).select("-password");
+  const user = await User.findOne({ _id: id }).select("friends");
+  const friend = await User.findOne({ _id: friendId }).select("friends");
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${id}`);
   }
@@ -49,47 +45,43 @@ const addRemoveFriend = async (req, res) => {
     throw new CustomError.NotFoundError(`No user with id : ${friendId}`);
   }
   if (user.friends.includes(friendId)) {
-    user.friends = user.friends.filter((id) => id !== friendId);
-    friend.friends = friend.friends.filter((id) => id !== id);
+    user.friends.pop(friendId);
+    friend.friends.pop(id);
   } else {
     user.friends.push(friendId);
     friend.friends.push(id);
   }
   await user.save();
   await friend.save();
-  const formattedFriends = friends.map(
-    ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-      return { _id, firstName, lastName, occupation, location, picturePath };
-    }
-  );
-  res.status(StatusCodes.OK).json({ friends: formattedFriends });
+  const friendsList = user.friends;
+  res.status(StatusCodes.OK).json({ friends: friendsList });
 };
 
 const uploadImage = async (req, res) => {
-    if (!req.files) {
-      throw new CustomError.BadRequestError('No File Uploaded');
-    }
-    const productImage = req.files.image;
-  
-    if (!productImage.mimetype.startsWith('image')) {
-      throw new CustomError.BadRequestError('Please Upload Image');
-    }
-  
-    const maxSize = 1024 * 1024 * 5;
-  
-    if (productImage.size > maxSize) {
-      throw new CustomError.BadRequestError(
-        'Please upload image smaller than 5MB'
-      );
-    }
-  
-    const imagePath = path.join(
-      __dirname,
-      '../public/uploads/' + `${productImage.name}`
+  if (!req.files) {
+    throw new CustomError.BadRequestError("No File Uploaded");
+  }
+  const productImage = req.files.image;
+
+  if (!productImage.mimetype.startsWith("image")) {
+    throw new CustomError.BadRequestError("Please Upload Image");
+  }
+
+  const maxSize = 1024 * 1024 * 5;
+
+  if (productImage.size > maxSize) {
+    throw new CustomError.BadRequestError(
+      "Please upload image smaller than 5MB"
     );
-    await productImage.mv(imagePath);
-    res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
-  };
+  }
+
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads/" + `${productImage.name}`
+  );
+  await productImage.mv(imagePath);
+  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
+};
 
 module.exports = {
   getAllUsers,

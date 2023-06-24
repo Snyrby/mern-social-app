@@ -5,7 +5,7 @@ const CustomError = require("../errors");
 
 const createPost = async (req, res) => {
   const { userId, description, picturePath } = req.body;
-  const isValidUser = await User.findOne({ _id: userId });
+  const isValidUser = await User.findOne({ _id: userId })
   if (!isValidUser) {
     throw new CustomError.NotFoundError(`No user with id : ${userId}`);
   }
@@ -17,46 +17,49 @@ const createPost = async (req, res) => {
   //TODO: Uncomment for authentication
   // req.body.userId = req.user.userId;
   // const post = await Post.create(req.body);
-  const post = await Post.create(newPost);
-  res.status(StatusCodes.CREATED).json(post);
+  const createdPost = await Post.create(newPost)
+  const post = createdPost.populate({
+    path: "user",
+    select: "firstName lastName picturePath location",
+  });
+  console.log(post);
+  res.status(StatusCodes.CREATED).json({ post });
 };
 
 const getFeedPosts = async (req, res) => {
   const posts = await Post.find({}).populate({
     path: "user",
-    select: "firstName lastName picturePath location"
+    select: "firstName lastName picturePath location",
   });
-  res.status(StatusCodes.OK).json({posts});
+  res.status(StatusCodes.OK).json({ posts });
 };
 
 const getUserPosts = async (req, res) => {
-  const { id : user } = req.params;
+  const { id: user } = req.params;
   const posts = await Post.find({ user }).populate({
     path: "user",
-    select: "firstName lastName picturePath location"
+    select: "firstName lastName picturePath location",
   });
   if (!posts) {
     throw new CustomError.NotFoundError(
-      `No posts found with the user id of ${userId}`
+      `No posts found with the user id of ${user}`
     );
   }
-  res.status(StatusCodes.OK).json({posts});
+  res.status(StatusCodes.OK).json({ posts });
 };
 
 const likePost = async (req, res) => {
-  const { id : postId } = req.params;
+  const { id: postId } = req.params;
   const { userId } = req.body;
-  const post = await Post.findOne({_id: postId});
+  const post = await Post.findOne({ _id: postId });
   const isLiked = post.likes.includes(userId);
   if (isLiked) {
     post.likes.pop(userId);
-    console.log("y");
   } else {
     post.likes.push(userId);
-    console.log("n");
   }
   await post.save();
-  res.status(StatusCodes.OK).json({post});
+  res.status(StatusCodes.OK).json({ post });
 
   // res.status(StatusCodes.OK).json({ updatedPost, count: updatedPost.likes.length });
 };

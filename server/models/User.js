@@ -40,12 +40,14 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    friends: [{
-      type: mongoose.Types.ObjectId,
-      ref: "User",
-      required: true,
-      default: "",
-    }],
+    friends: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true,
+        default: "",
+      },
+    ],
     location: String,
     occupation: String,
     viewedProfile: {

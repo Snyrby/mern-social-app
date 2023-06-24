@@ -58,7 +58,8 @@ const CreatePosts = ({ picturePath }) => {
     }
     try {
       const { data } = await axios.post(`${url}/api/v1/posts`, formData);
-      dispatch(setPosts({ data }));
+      console.log(data);
+      dispatch(setPosts({ post: data.post }));
       onSubmitProps.resetForm();
     } catch (error) {
       console.log(error);

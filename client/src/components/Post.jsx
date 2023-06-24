@@ -5,12 +5,13 @@ import {
   ShareOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
-import { FlexBetween, WidgetWrapper, Friend } from "../style";
+import { FlexBetween, WidgetWrapper } from "../style";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "../state";
 import url from "../utils/url";
-import axios from 'axios';
+import axios from "axios";
+import Friend from "./Friend";
 
 const Post = ({
   postId,
@@ -22,7 +23,7 @@ const Post = ({
   name,
   location,
 }) => {
-  const [isComment, setIsComment] = useState(false)
+  const [isComment, setIsComment] = useState(false);
   const dispatch = useDispatch();
   const loggedInUserId = useSelector((state) => state.user.userId);
   // const isLiked = Boolean(likes[loggedInUserId]);
@@ -41,24 +42,24 @@ const Post = ({
 
   const patchLike = async () => {
     try {
-      const { data } = await axios.patch(`${url}/api/v1/posts/${postId}/like`)
+      const { data } = await axios.patch(`${url}/api/v1/posts/${postId}/like`);
       const updatedPost = data.updatedPost;
       const likeCount = data.count;
-      dispatch(setPost({ post: updatedPost }))
+      dispatch(setPost({ post: updatedPost }));
     } catch (error) {
-      
+      console.log(error);
     }
-  }
+  };
   return (
-    <WidgetWrapper m="2rem 0"> 
-      <Friend 
+    <WidgetWrapper m="2rem 0">
+      <Friend
         friendId={userId}
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
       />
     </WidgetWrapper>
-  )
-}
+  );
+};
 
-export default Post
+export default Post;

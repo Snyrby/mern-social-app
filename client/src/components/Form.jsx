@@ -16,7 +16,7 @@ import { setLogin } from "../state";
 import Dropzone from "react-dropzone";
 import { FlexBetween } from "../style";
 import url from "../utils/url";
-import axios from 'axios';
+import axios from "axios";
 
 const registerSchema = yup.object().shape({
   firstName: yup
@@ -91,12 +91,12 @@ const Form = () => {
     const { email, password } = values;
     const loginUser = { email, password };
     try {
-        const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
-        onSubmitProps.resetForm();
-        dispatch(setLogin({user:data.user}));
-        navigate("/home");
+      const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
+      onSubmitProps.resetForm();
+      dispatch(setLogin({ user: data.user }));
+      navigate("/home");
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   };
 

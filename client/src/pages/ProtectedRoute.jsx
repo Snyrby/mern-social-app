@@ -1,9 +1,9 @@
-import { Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { url } from '../utils';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { setLogin } from '../state';
+import { Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { url } from "../utils";
+import { useEffect } from "react";
+import axios from "axios";
+import { setLogin } from "../state";
 
 const ProtectedRoute = ({ children, ...rest }) => {
   // useEffect(() => {

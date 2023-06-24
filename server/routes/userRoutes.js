@@ -26,8 +26,10 @@ router.route('/showMe').get(authenticateUser, showCurrentUser);
 // TODO: uncomment the following line
 // router.route('/:id').get(authenticateUser, getSingleUser);
 router.route('/:id').get(getSingleUser);
-router.route('/:id/friends').get(authenticateUser, getUserFriends);
-router.route('/:id/:friendId').patch(authenticateUser, addRemoveFriend);
+// router.route('/friends/:id').get(authenticateUser, getUserFriends);
+router.route('/friends/:id').get(getUserFriends);
+// router.route('/:id/:friendId').patch(authenticateUser, addRemoveFriend);
+router.route('/:id/:friendId').patch(addRemoveFriend);
 router
   .route('/uploadImage')
   .post(authenticateUser, uploadImage);

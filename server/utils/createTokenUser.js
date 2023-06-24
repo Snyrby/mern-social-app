@@ -9,6 +9,7 @@ const createTokenUser = (user) => {
     viewedProfile: user.viewedProfile,
     picturePath: user.picturePath,
     impressions: user.impressions,
+    friends: user.friends,
   };
 };
 
