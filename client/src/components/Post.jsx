@@ -22,16 +22,15 @@ const Post = ({
   name,
   location,
 }) => {
-  console.log(likes);
   const [isComment, setIsComment] = useState(false)
   const dispatch = useDispatch();
   const loggedInUserId = useSelector((state) => state.user.userId);
   // const isLiked = Boolean(likes[loggedInUserId]);
-  if (likes?.get(loggedInUserId)) {
-    console.log("no like");
-  } else {
-    console.log("liked");
-  }
+  // if (likes?.get(loggedInUserId)) {
+  //   console.log("no like");
+  // } else {
+  //   console.log("liked");
+  // }
   // let isLiked = false;
   // likes[loggedInUserId] ? isLiked = true : isLiked = false;
   // console.log(isLiked);

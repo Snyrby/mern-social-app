@@ -24,7 +24,7 @@ const createPost = async (req, res) => {
 const getFeedPosts = async (req, res) => {
   const posts = await Post.find({}).populate({
     path: "user",
-    select: "firstName lastName picturePath"
+    select: "firstName lastName picturePath location"
   });
   res.status(StatusCodes.OK).json({posts});
 };
@@ -33,7 +33,7 @@ const getUserPosts = async (req, res) => {
   const { id : user } = req.params;
   const posts = await Post.find({ user }).populate({
     path: "user",
-    select: "firstName lastName picturePath"
+    select: "firstName lastName picturePath location"
   });
   if (!posts) {
     throw new CustomError.NotFoundError(
@@ -55,15 +55,8 @@ const likePost = async (req, res) => {
     post.likes.push(userId);
     console.log("n");
   }
-  // const isLiked = Post.find({ likes: [userId] });
-
-  // if (isLiked) {
-  //   Post.likes.pop(userId);
-  // } else {
-  //   post.likes.push(userId);
-  // }
-
-  res.status(StatusCodes.OK).json(post);
+  await post.save();
+  res.status(StatusCodes.OK).json({post});
 
   // res.status(StatusCodes.OK).json({ updatedPost, count: updatedPost.likes.length });
 };
