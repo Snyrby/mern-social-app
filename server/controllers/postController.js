@@ -18,12 +18,12 @@ const createPost = async (req, res) => {
   // req.body.userId = req.user.userId;
   // const post = await Post.create(req.body);
   const createdPost = await Post.create(newPost)
-  const post = createdPost.populate({
+  const posts = await createdPost.populate({
     path: "user",
     select: "firstName lastName picturePath location",
   });
-  console.log(post);
-  res.status(StatusCodes.CREATED).json({ post });
+  console.log(posts);
+  res.status(StatusCodes.CREATED).json({ posts });
 };
 
 const getFeedPosts = async (req, res) => {

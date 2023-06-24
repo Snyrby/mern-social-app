@@ -1,6 +1,8 @@
 const Comment = require("../models/Comment");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
+const Post = require("../models/Post");
+const User = require("../models/User");
 
 const createComment = async (req, res) => {
     const { userId, postId, description} = req.body;
@@ -18,6 +20,8 @@ const createComment = async (req, res) => {
         description,
     });
     const comment = await Comment.create(newComment);
+    isValidPost.numOfComments += 1;
+    isValidPost.save();
     res.status(StatusCodes.CREATED).json(comment);
 }
 

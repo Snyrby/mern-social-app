@@ -21,7 +21,7 @@ import { FlexBetween, UserImage, WidgetWrapper } from "../style";
 import Dropzone from "react-dropzone";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../state";
+import { addPost, setPosts } from "../state";
 import url from "../utils/url";
 import axios from "axios";
 import { Formik } from "formik";
@@ -48,6 +48,7 @@ const CreatePosts = ({ picturePath }) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
+  const posts = useSelector((state) => state.posts);
 
   const handlePost = async (values, onSubmitProps) => {
     const formData = new FormData();
@@ -58,8 +59,7 @@ const CreatePosts = ({ picturePath }) => {
     }
     try {
       const { data } = await axios.post(`${url}/api/v1/posts`, formData);
-      console.log(data);
-      dispatch(setPosts({ post: data.post }));
+      dispatch(addPost({ posts: data.posts }));
       onSubmitProps.resetForm();
     } catch (error) {
       console.log(error);
@@ -178,10 +178,10 @@ const CreatePosts = ({ picturePath }) => {
                   <MoreHorizOutlined sx={{ color: mediumMain }} />
                 </FlexBetween>
               )}
-              <Button 
+              <Button
                 disabled={!values.description}
                 type="submit"
-                sx={{ 
+                sx={{
                   color: palette.background.alt,
                   backgroundColor: palette.primary.main,
                   borderRadius: "3rem",
