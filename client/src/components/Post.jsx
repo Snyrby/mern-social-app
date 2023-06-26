@@ -5,7 +5,7 @@ import {
   ShareOutlined,
 } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
-import { FlexBetween, WidgetWrapper } from "../style";
+import { FlexBetween, WidgetWrapper, UserImage } from "../style";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "../state";
@@ -25,6 +25,7 @@ const Post = ({
   commentsLength,
 }) => {
   const [isComment, setIsComment] = useState(false);
+  const [comments, setComments] = useState("")
   const dispatch = useDispatch();
   const loggedInUserId = useSelector((state) => state.user.userId);
   const isLiked = Array.isArray(likes) ? likes.includes(loggedInUserId) : false;
@@ -33,6 +34,11 @@ const Post = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+
+  const commentClickHandler = () => {
+    setIsComment(!isComment);
+    getComments();
+  };
 
   const patchLike = async () => {
     try {
@@ -46,7 +52,7 @@ const Post = ({
   const getComments = async () => {
     try {
       const { data } = await axios.get(`${url}/api/v1/comments/${postId}`);
-      return data;
+      setComments({comments: data.comments})
     } catch (error) {
       console.log(error);
     }
@@ -84,7 +90,7 @@ const Post = ({
             <Typography>{likesCount}</Typography>
           </FlexBetween>
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={() => setIsComment(!isComment)}>
+            <IconButton onClick={commentClickHandler}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
             <Typography>{commentsLength}</Typography>
@@ -98,15 +104,24 @@ const Post = ({
         <Box 
           mt="0.5rem"
         >
-          {console.log(getComments())}
-          {[getComments()].map((comment, index) => (
-            <Box key={`${name}-${index}`}>
+          {console.log(comments)}
+          {comments.comments.map((comment, index) => (
+            <Box key={`${name}-${index}`} display="flex" justifyContent="flex-start" flexDirection="column">
               <Divider />
-              <Typography sx={{color: main, m:"0.5rem", pl:"1rem"}}>
-                {comment.description}
-              </Typography>
+              <Box display="flex" mt="1rem" alignItems="center" flex="1">
+                <UserImage image={comment.user.picturePath} size="30px" />
+                <Typography sx={{color: main, m:"0.5rem", pl:"1rem", textTransform:"capitalize"}}>
+                  {comment.user.firstName} {comment.user.lastName}
+                </Typography>
+              </Box>
+              <Box flex="1">
+                <Typography sx={{color: main, m:"0.5rem", pl:"1rem"}}>
+                  {comment.description}
+                </Typography>
+              </Box>
             </Box>
           ))}
+          <Divider />
         </Box>
       )}
     </WidgetWrapper>
