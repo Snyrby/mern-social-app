@@ -22,7 +22,7 @@ export const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={`./${image}`}
+        src={`http://localhost:3000/${image}`}
       />
     </Box>
   );

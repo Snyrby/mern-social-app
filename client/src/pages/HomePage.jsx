@@ -1,5 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { AllPosts, Navbar } from "../components";
+import { Advert, AllPosts, FriendList, Navbar } from "../components";
 import { useSelector } from "react-redux";
 import { UserInfo, CreatePosts } from "../components";
 
@@ -28,7 +28,9 @@ const HomePage = () => {
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
-
+            <Advert />
+            <Box m="2rem 0" />
+            <FriendList userId={userId} />
           </Box>
         )}
       </Box>

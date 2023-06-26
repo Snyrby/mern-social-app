@@ -35,20 +35,22 @@ const AllPosts = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {postsReversed.map(({ _id, user, picturePath, description, likes, numOfComments }) => (
-        <Post
-          key={_id}
-          postId={_id}
-          postUserId={user._id}
-          picturePath={picturePath}
-          userPicturePath={user.picturePath}
-          description={description}
-          likes={likes}
-          name={`${user.firstName} ${user.lastName}`}
-          location={user.location}
-          commentsLength={numOfComments}
-        />
-      ))}
+      {postsReversed ? postsReversed.map(
+        ({ _id, user, picturePath, description, likes, numOfComments }) => (
+          <Post
+            key={_id}
+            postId={_id}
+            postUserId={user._id}
+            picturePath={picturePath}
+            userPicturePath={user.picturePath}
+            description={description}
+            likes={likes}
+            name={`${user.firstName} ${user.lastName}`}
+            location={user.location}
+            commentsLength={numOfComments}
+          />
+        )
+      ) : null}
     </>
   );
 };

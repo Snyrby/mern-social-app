@@ -14,21 +14,25 @@ import axios from "axios";
 import { AiFillLinkedin, AiFillTwitterCircle } from "react-icons/ai";
 
 const UserInfo = ({ userId, picturePath }) => {
-  const user = useSelector((state) => state.user);
   const { palette } = useTheme();
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
 
-  // const getUser = async () => {
-  //   const { data } = await axios.get(`${url}/api/v1/users/${userId}`);
-  //   setUser(data.user);
-  // };
+  const getUser = async () => {
+    try {
+      const { data } = await axios.get(`${url}/api/v1/users/${userId}`);
+      setUser(data.user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
+  useEffect(() => {
+    getUser();
+  }, []);
 
   if (!user) {
     return null;
@@ -52,6 +56,7 @@ const UserInfo = ({ userId, picturePath }) => {
         onClick={() => navigate(`/profile/${userId}`)}
       >
         <FlexBetween gap="1rem">
+          {console.log(picturePath)}
           <UserImage image={picturePath} />
           <Box>
             <Typography
@@ -59,6 +64,7 @@ const UserInfo = ({ userId, picturePath }) => {
               color={dark}
               fontWeight="500"
               sx={{
+                textTransform: "capitalize",
                 "&:hover": {
                   color: palette.primary.light,
                   cursor: "pointer",

@@ -12,6 +12,7 @@ import { setPost } from "../state";
 import url from "../utils/url";
 import axios from "axios";
 import Friend from "./Friend";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({
   postId,
@@ -25,8 +26,9 @@ const Post = ({
   commentsLength,
 }) => {
   const [isComment, setIsComment] = useState(false);
-  const [comments, setComments] = useState("")
+  const [comments, setComments] = useState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const loggedInUserId = useSelector((state) => state.user.userId);
   const isLiked = Array.isArray(likes) ? likes.includes(loggedInUserId) : false;
   const likesCount = [...likes].length;
@@ -42,7 +44,9 @@ const Post = ({
 
   const patchLike = async () => {
     try {
-      const { data } = await axios.patch(`${url}/api/v1/posts/like/${postId}`);
+      const { data } = await axios.patch(`${url}/api/v1/posts/like/${postId}`, {
+        userId: loggedInUserId,
+      });
       dispatch(setPost({ post: data.post }));
     } catch (error) {
       console.log(error);
@@ -52,7 +56,7 @@ const Post = ({
   const getComments = async () => {
     try {
       const { data } = await axios.get(`${url}/api/v1/comments/${postId}`);
-      setComments({comments: data.comments})
+      setComments({ comments: data.comments });
     } catch (error) {
       console.log(error);
     }
@@ -101,26 +105,46 @@ const Post = ({
         </IconButton>
       </FlexBetween>
       {isComment && (
-        <Box 
-          mt="0.5rem"
-        >
-          {console.log(comments)}
-          {comments.comments.map((comment, index) => (
-            <Box key={`${name}-${index}`} display="flex" justifyContent="flex-start" flexDirection="column">
-              <Divider />
-              <Box display="flex" mt="1rem" alignItems="center" flex="1">
-                <UserImage image={comment.user.picturePath} size="30px" />
-                <Typography sx={{color: main, m:"0.5rem", pl:"1rem", textTransform:"capitalize"}}>
-                  {comment.user.firstName} {comment.user.lastName}
-                </Typography>
-              </Box>
-              <Box flex="1">
-                <Typography sx={{color: main, m:"0.5rem", pl:"1rem"}}>
-                  {comment.description}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
+        <Box mt="0.5rem">
+          {comments
+            ? comments.comments.map((comment, index) => (
+                <Box
+                  key={`${name}-${index}`}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="flex-start"
+                >
+                  <Divider width="100%" />
+                  <Box display="flex" flex="1" mt="0.5rem">
+                    <UserImage image={comment.user.picturePath} size="30px" />
+                    <Typography
+                      variant="h5"
+                      fontWeight="500"
+                      onClick={() => {
+                        navigate(`/profile/${comment.user._id}`);
+                      }}
+                      sx={{
+                        color: main,
+                        m: "0.5rem",
+                        pl: "1rem",
+                        textTransform: "capitalize",
+                        "&:hover": {
+                          color: palette.primary.light,
+                          cursor: "pointer",
+                        },
+                      }}
+                    >
+                      {comment.user.firstName} {comment.user.lastName}
+                    </Typography>
+                  </Box>
+                  <Box flex="1">
+                    <Typography sx={{ color: main, m: "0.5rem", pl: "1rem" }}>
+                      {comment.description}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))
+            : null}
           <Divider />
         </Box>
       )}

@@ -6,6 +6,7 @@ import {
   ImageOutlined,
   MicOutlined,
   MoreHorizOutlined,
+  Close,
 } from "@mui/icons-material";
 import {
   Box,
@@ -43,6 +44,7 @@ const CreatePosts = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [post, setPost] = useState("");
+  const [mobileMenu, setMobileMenu] = useState(false);
   const { palette } = useTheme();
   const { userId } = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -175,9 +177,18 @@ const CreatePosts = ({ picturePath }) => {
               ) : (
                 // TODO: ADD values on click
                 <FlexBetween gap="0.25rem">
-                  <MoreHorizOutlined sx={{ color: mediumMain }} />
+                  {
+                  mobileMenu ? (
+                  <MoreHorizOutlined
+                    sx={{ color: mediumMain }}
+                    onClick={() => setMobileMenu(!mobileMenu)}
+                ) : (
+                  <Close 
+                    sx={{ color: mediumMain }}
+                    onClick={() => setMobileMenu(!mobileMenu)}/>}
+                  />)
+                  }
                 </FlexBetween>
-              )}
               <Button
                 disabled={!values.description}
                 type="submit"
@@ -194,6 +205,26 @@ const CreatePosts = ({ picturePath }) => {
                 Create Post
               </Button>
             </FlexBetween>
+            {mobileMenu ? (
+              <>
+                <FlexBetween gap="0.25rem" mt="0.75rem">
+                  <Box display="flex">
+                    <GifBoxOutlined sx={{ color: mediumMain }} />
+                    <Typography color={mediumMain}>Clip</Typography>
+                  </Box>
+                  <Box display="flex">
+                    <AttachFileOutlined sx={{ color: mediumMain }} />
+                    <Typography color={mediumMain}>Attachment</Typography>
+                  </Box>
+                  <Box display="flex">
+                    <MicOutlined sx={{ color: mediumMain }} />
+                    <Typography color={mediumMain}>Audio</Typography>
+                  </Box>
+                </FlexBetween>
+              </>
+            ) : (
+              setMobileMenu(false)
+            )}
           </WidgetWrapper>
         </form>
       )}

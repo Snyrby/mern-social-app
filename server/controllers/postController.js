@@ -5,7 +5,7 @@ const CustomError = require("../errors");
 
 const createPost = async (req, res) => {
   const { userId, description, picturePath } = req.body;
-  const isValidUser = await User.findOne({ _id: userId })
+  const isValidUser = await User.findOne({ _id: userId });
   if (!isValidUser) {
     throw new CustomError.NotFoundError(`No user with id : ${userId}`);
   }
@@ -17,7 +17,7 @@ const createPost = async (req, res) => {
   //TODO: Uncomment for authentication
   // req.body.userId = req.user.userId;
   // const post = await Post.create(req.body);
-  const createdPost = await Post.create(newPost)
+  const createdPost = await Post.create(newPost);
   const posts = await createdPost.populate({
     path: "user",
     select: "firstName lastName picturePath location",
@@ -51,7 +51,10 @@ const getUserPosts = async (req, res) => {
 const likePost = async (req, res) => {
   const { id: postId } = req.params;
   const { userId } = req.body;
-  const post = await Post.findOne({ _id: postId });
+  const post = await Post.findOne({ _id: postId }).populate({
+    path: "user",
+    select: "firstName lastName picturePath location",
+  });
   const isLiked = post.likes.includes(userId);
   if (isLiked) {
     post.likes.pop(userId);

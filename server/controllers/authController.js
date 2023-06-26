@@ -93,7 +93,10 @@ const login = async (req, res) => {
   if (!email || !password) {
     throw new CustomError.BadRequestError("Please provide email and password");
   }
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate({
+    path:"friends",
+    select:"firstName lastName picturePath occupation",
+  });
 
   if (!user) {
     throw new CustomError.UnauthenticatedError("Invalid Credentials");

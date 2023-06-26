@@ -17,7 +17,6 @@ const getSingleUser = async (req, res) => {
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${req.params.id}`);
   }
-  checkPermissions(req.user, user._id);
   res.status(StatusCodes.OK).json({ user });
 };
 
@@ -26,7 +25,10 @@ const showCurrentUser = async (req, res) => {
 };
 
 const getUserFriends = async (req, res) => {
-  const user = await User.findOne({ _id: req.params.id }).select("friends");
+  const user = await User.findOne({ _id: req.params.id }).select("friends").populate({
+    path:"friends",
+    select:"firstName lastName picturePath occupation",
+  });
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${id}`);
   }
@@ -53,8 +55,11 @@ const addRemoveFriend = async (req, res) => {
   }
   await user.save();
   await friend.save();
-  const friendsList = user.friends;
-  res.status(StatusCodes.OK).json({ friends: friendsList });
+  const friendsList = await User.findOne({ _id: id }).select("friends").populate({
+    path: "friends",
+    select: "firstName lastName picturePath occupation",
+  });
+  res.status(StatusCodes.OK).json({ friends: friendsList.friends });
 };
 
 const uploadImage = async (req, res) => {

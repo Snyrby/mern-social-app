@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../state";
 import { useNavigate } from "react-router-dom";
 import { FlexBetween } from "../style";
+import axios from "axios";
+import { url } from "../utils";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -38,6 +40,15 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  const logOut = async () => {
+    try {
+      const { data } = await axios.delete(`${url}/api/v1/auth/logout`);
+      dispatch(setLogout())
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -102,9 +113,9 @@ const Navbar = () => {
               input={<InputBase />}
             >
               <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
+                <Typography sx={{textTransform:"capitalize"}}>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={logOut}>Log Out</MenuItem>
             </Select>
           </FormControl>
         </FlexBetween>
@@ -176,7 +187,7 @@ const Navbar = () => {
                 input={<InputBase />}
               >
                 <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
+                  <Typography sx={{textTransform:"capitalize"}}>{fullName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
                   Log Out

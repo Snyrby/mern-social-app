@@ -5,5 +5,17 @@ import CreatePosts from "./CreatePosts";
 import AllPosts from "./AllPosts";
 import Post from "./Post";
 import Friend from "./Friend";
+import Advert from "./Advert";
+import FriendList from "./FriendList";
 
-export { Form, Navbar, UserInfo, CreatePosts, AllPosts, Post, Friend }; 
+export {
+  Form,
+  Navbar,
+  UserInfo,
+  CreatePosts,
+  AllPosts,
+  Post,
+  Friend,
+  Advert,
+  FriendList,
+};

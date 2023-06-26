@@ -6,6 +6,7 @@ import { url } from "../utils";
 import { useNavigate } from "react-router-dom";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { FlexBetween, UserImage } from "../style";
+import { useEffect } from "react";
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
@@ -18,15 +19,14 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-  const isFriend = Array.isArray(friends) ? friends.includes(friendId) : false;
+  const isFriend = Array.isArray(friends) ? friends.find(e => e._id === friendId) : false;
 
   const patchFriend = async () => {
     try {
       const { data } = await axios.patch(
         `${url}/api/v1/users/${userId}/${friendId}`
       );
-      console.log(data.friends);
-      dispatch(setFriends({ friends: data.friends }));
+      dispatch(setFriends({friends: data.friends }));
     } catch (error) {
       console.log(error);
     }
@@ -47,6 +47,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             variant="h5"
             fontWeight="500"
             sx={{
+              textTransform: "capitalize",
               "&:hover": {
                 color: palette.primary.light,
                 cursor: "pointer",
