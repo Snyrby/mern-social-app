@@ -44,7 +44,7 @@ const CreatePosts = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [post, setPost] = useState("");
-  const [mobileMenu, setMobileMenu] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(true);
   const { palette } = useTheme();
   const { userId } = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -177,19 +177,17 @@ const CreatePosts = ({ picturePath }) => {
               ) : (
                 // TODO: ADD values on click
                 <FlexBetween gap="0.25rem">
-                  {
-                    mobileMenu ? (
+                  {mobileMenu ? (
                     <MoreHorizOutlined
                       sx={{ color: mediumMain }}
                       onClick={() => setMobileMenu(!mobileMenu)}
                     />
-                ) : (
-                  <Close 
-                    sx={{ color: mediumMain }}
-                    onClick={() => setMobileMenu(!mobileMenu)}
-                  />
-                  )
-                }
+                  ) : (
+                    <Close
+                      sx={{ color: mediumMain }}
+                      onClick={() => setMobileMenu(!mobileMenu)}
+                    />
+                  )}
                 </FlexBetween>
               )}
               <Button
@@ -205,11 +203,10 @@ const CreatePosts = ({ picturePath }) => {
                   },
                 }}
               >
-                
                 Create Post
               </Button>
             </FlexBetween>
-            {mobileMenu ? (
+            {!isNonMobileScreens && !mobileMenu ? (
               <>
                 <FlexBetween gap="0.25rem" mt="0.75rem">
                   <Box display="flex">
@@ -227,7 +224,7 @@ const CreatePosts = ({ picturePath }) => {
                 </FlexBetween>
               </>
             ) : (
-              setMobileMenu(!mobileMenu)
+              null
             )}
           </WidgetWrapper>
         </form>

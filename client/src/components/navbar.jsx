@@ -115,7 +115,7 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography sx={{textTransform:"capitalize"}}>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={logOut}>Log Out</MenuItem>
+              <MenuItem onClick={() => logOut()}>Log Out</MenuItem>
             </Select>
           </FormControl>
         </FlexBetween>
@@ -189,7 +189,7 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography sx={{textTransform:"capitalize"}}>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
+                <MenuItem onClick={() => logOut()}>
                   Log Out
                 </MenuItem>
               </Select>
