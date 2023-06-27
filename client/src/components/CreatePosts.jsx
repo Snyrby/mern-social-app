@@ -178,17 +178,20 @@ const CreatePosts = ({ picturePath }) => {
                 // TODO: ADD values on click
                 <FlexBetween gap="0.25rem">
                   {
-                  mobileMenu ? (
-                  <MoreHorizOutlined
-                    sx={{ color: mediumMain }}
-                    onClick={() => setMobileMenu(!mobileMenu)}
+                    mobileMenu ? (
+                    <MoreHorizOutlined
+                      sx={{ color: mediumMain }}
+                      onClick={() => setMobileMenu(!mobileMenu)}
+                    />
                 ) : (
                   <Close 
                     sx={{ color: mediumMain }}
-                    onClick={() => setMobileMenu(!mobileMenu)}/>}
-                  />)
-                  }
+                    onClick={() => setMobileMenu(!mobileMenu)}
+                  />
+                  )
+                }
                 </FlexBetween>
+              )}
               <Button
                 disabled={!values.description}
                 type="submit"
@@ -202,6 +205,7 @@ const CreatePosts = ({ picturePath }) => {
                   },
                 }}
               >
+                
                 Create Post
               </Button>
             </FlexBetween>
@@ -223,7 +227,7 @@ const CreatePosts = ({ picturePath }) => {
                 </FlexBetween>
               </>
             ) : (
-              setMobileMenu(false)
+              setMobileMenu(!mobileMenu)
             )}
           </WidgetWrapper>
         </form>
