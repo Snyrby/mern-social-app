@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
   IconButton,
@@ -9,6 +9,13 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Tooltip,
+  Menu,
+  Popper,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
 } from "@mui/material";
 import {
   Search,
@@ -17,36 +24,49 @@ import {
   LightMode,
   Notifications,
   Help,
-  Menu,
   Close,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../state";
 import { useNavigate } from "react-router-dom";
-import { FlexBetween } from "../style";
-import axios from "axios";
-import { url } from "../utils";
+import { FlexBetween, FlexCenter, UserImage } from "../style";
+import { userLogoutApi } from "../api/auth";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+  const [isMenuToggled, setIsMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state?.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
-  const dark = theme.palette.neutral.dark;
-  const background = theme.palette.background.default;
-  const primaryLight = theme.palette.primary.light;
-  const alt = theme.palette.background.alt;
-  const fullName = `${user.firstName} ${user.lastName}`;
+  const neutralLight = theme?.palette?.neutral?.light;
+  const dark = theme?.palette?.neutral?.dark;
+  const background = theme?.palette?.background?.default;
+  const primaryLight = theme?.palette?.primary?.light;
+  const alt = theme?.palette?.background?.alt;
+  const fullName = `${user?.firstName} ${user?.lastName}`;
+  const anchorRef = useRef(null);
 
-  const logOut = async () => {
-    try {
-      const { data } = await axios.delete(`${url}/api/v1/auth/logout`);
-      dispatch(setLogout())
-    } catch (error) {
-      console.log(error);
+  const logOut = () => {
+    userLogoutApi();
+    dispatch(setLogout());
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setIsMenuToggled(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setIsMenuToggled(false);
+    } else if (event.key === 'Escape') {
+      setIsMenuToggled(false);
     }
   }
 
@@ -67,20 +87,19 @@ const Navbar = () => {
         >
           Sociopedia
         </Typography>
-        {isNonMobileScreens && (
-          <FlexBetween
-            borderColor={neutralLight}
-            borderRadius="9px"
-            gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
-        )}
+        <FlexBetween
+          borderColor={neutralLight}
+          borderRadius="9px"
+          gap="3rem"
+          padding="0.1rem 1.5rem"
+        >
+          <InputBase placeholder="Search..." />
+          <IconButton>
+            <Search />
+          </IconButton>
+        </FlexBetween>
       </FlexBetween>
+
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
@@ -94,30 +113,74 @@ const Navbar = () => {
           <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
-                },
+          <Tooltip title="Account settings">
+            <IconButton onClick={() => setIsMenuToggled(!isMenuToggled)}>
+              <UserImage size="40px" image={user?.picturePath} />
+            </IconButton>
+          </Tooltip>
+          {isMenuToggled &&(
+            <Popper
+            open={isMenuToggled}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            placement="bottom-start"
+            transition
+            disablePortal
+          >
+          {/* {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === 'bottom-start' ? 'left top' : 'left bottom',
               }}
-              input={<InputBase />}
-            >
-              <MenuItem value={fullName}>
-                <Typography sx={{textTransform:"capitalize"}}>{fullName}</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => logOut()}>Log Out</MenuItem>
-            </Select>
-          </FormControl>
+            > */}
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={isMenuToggled}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            {/* </Grow>
+          )} */}
+          </Popper>
+          // <FormControl variant="standard" value={fullName}>
+          //   <Select
+          //     label={fullName}
+          //     value={fullName}
+          //     sx={{
+          //       backgroundColor: neutralLight,
+          //       width: "150px",
+          //       borderRadius: "0.25rem",
+          //       p: "0.25rem 1rem",
+          //       "& .MuiSvgIcon-root": {
+          //         pr: "0.25rem",
+          //         width: "3rem",
+          //       },
+          //       "& .MuiSelect-select:focus": {
+          //         backgroundColor: neutralLight,
+          //       },
+          //     }}
+          //     input={<InputBase />}
+          //   >
+          //     <MenuItem value={fullName}>
+          //       <Typography sx={{ textTransform: "capitalize" }}>
+          //         Profile
+          //       </Typography>
+          //     </MenuItem>
+          //     <MenuItem onClick={() => logOut()}>Log Out</MenuItem>
+          //   </Select>
+          // </FormControl>
+
+          )}
         </FlexBetween>
       ) : (
         <IconButton
@@ -187,11 +250,14 @@ const Navbar = () => {
                 input={<InputBase />}
               >
                 <MenuItem value={fullName}>
-                  <Typography sx={{textTransform:"capitalize"}}>{fullName}</Typography>
+                  <Typography sx={{ textTransform: "capitalize" }}>
+                    {fullName}
+                  </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => logOut()}>
-                  Log Out
+                <MenuItem onClick={() => navigate(`/edit-profile/${user._id}`)}>
+                  <Typography>Profile</Typography>
                 </MenuItem>
+                <MenuItem onClick={() => logOut()}>Log Out</MenuItem>
               </Select>
             </FormControl>
           </FlexBetween>

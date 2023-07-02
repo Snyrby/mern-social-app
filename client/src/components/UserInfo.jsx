@@ -6,12 +6,10 @@ import {
 } from "@mui/icons-material";
 import { Box, Typography, Divider, useTheme } from "@mui/material";
 import { FlexBetween, UserImage, WidgetWrapper } from "../style";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { url } from "../utils";
-import axios from "axios";
 import { AiFillLinkedin, AiFillTwitterCircle } from "react-icons/ai";
+import { getUserInfoApi } from "../api/user";
 
 const UserInfo = ({ userId, picturePath }) => {
   const { palette } = useTheme();
@@ -21,48 +19,33 @@ const UserInfo = ({ userId, picturePath }) => {
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
 
-  const getUser = async () => {
-    try {
-      const { data } = await axios.get(`${url}/api/v1/users/${userId}`);
-      setUser(data.user);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    getUser();
+    getUserInfoApi(setUser, userId);
   }, []);
 
   if (!user) {
     return null;
     // TODO: loading state
   }
-
   const {
+    _id: profileUserId,
     firstName,
     lastName,
     location,
     occupation,
-    viewedProfile,
-    impressions,
     friends,
   } = user;
   return (
     <WidgetWrapper>
-      <FlexBetween
-        gap="0.5rem"
-        pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+      <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
-          {console.log(picturePath)}
           <UserImage image={picturePath} />
           <Box>
             <Typography
               variant="h4"
               color={dark}
               fontWeight="500"
+              onClick={() => navigate(`/profile/${userId}`)}
               sx={{
                 textTransform: "capitalize",
                 "&:hover": {
@@ -76,7 +59,17 @@ const UserInfo = ({ userId, picturePath }) => {
             <Typography color={medium}>{friends?.length} friends</Typography>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        {profileUserId === userId && (
+          <ManageAccountsOutlined
+            onClick={() => navigate(`/edit-profile/${userId}`)}
+            sx={{
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+          />
+        )}
+        {/* <ManageAccountsOutlined onClick={() => navigate(`/profile/${userId}`)}/> */}
       </FlexBetween>
       <Divider />
 
@@ -94,7 +87,7 @@ const UserInfo = ({ userId, picturePath }) => {
       <Divider />
 
       {/* Third Row */}
-      <Box p="1rem 0">
+      {/* <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
           <Typography color={main} fontWeight="500">
@@ -108,7 +101,7 @@ const UserInfo = ({ userId, picturePath }) => {
           </Typography>
         </FlexBetween>
       </Box>
-      <Divider />
+      <Divider /> */}
 
       {/* Fourth Row */}
       <Box p="1rem 0">

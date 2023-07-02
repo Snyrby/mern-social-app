@@ -16,9 +16,6 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route exact path="/" element={<LoginPage />} />
-            {/* <ProtectedRoute path="/home" exact>
-              <HomePage />
-            </ProtectedRoute> */}
             <Route
               exact
               path="/home"
