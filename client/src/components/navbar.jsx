@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   IconButton,
@@ -15,7 +15,6 @@ import {
   Grow,
   Paper,
   ClickAwayListener,
-  MenuList,
 } from "@mui/material";
 import {
   Search,
@@ -35,6 +34,7 @@ import { userLogoutApi } from "../api/auth";
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const [isMenuToggled, setIsMenuToggled] = useState(false);
+  const open = Boolean(isMenuToggled);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
@@ -54,7 +54,7 @@ const Navbar = () => {
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (anchorRef?.current?.contains(event?.target)) {
       return;
     }
 
@@ -114,44 +114,32 @@ const Navbar = () => {
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
           <Tooltip title="Account settings">
-            <IconButton onClick={() => setIsMenuToggled(!isMenuToggled)}>
+            <IconButton 
+              onClick={() => setIsMenuToggled(!isMenuToggled)}
+              id="menu-button" 
+              aria-controls={open ? "account-menu" : undefined}
+              aria-aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
               <UserImage size="40px" image={user?.picturePath} />
             </IconButton>
           </Tooltip>
           {isMenuToggled &&(
-            <Popper
-            open={isMenuToggled}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            placement="bottom-start"
-            transition
-            disablePortal
-          >
-          {/* {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === 'bottom-start' ? 'left top' : 'left bottom',
-              }}
-            > */}
-              <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={isMenuToggled}
-                    id="composition-menu"
-                    aria-labelledby="composition-button"
+                  <Menu
+                    open={open}
+                    // autoFocusItem={isMenuToggled}
+                    id="account-menu"
                     onKeyDown={handleListKeyDown}
+                    anchorEl={isMenuToggled}
+                    MenuListProps={{"aria-labelledby": "menu-button"}}
+                    onClose={handleClose}
                   >
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>My account</MenuItem>
                     <MenuItem onClick={handleClose}>Logout</MenuItem>
-                  </MenuList>
+                  </Menu>
                 </ClickAwayListener>
-              </Paper>
-            {/* </Grow>
-          )} */}
-          </Popper>
           // <FormControl variant="standard" value={fullName}>
           //   <Select
           //     label={fullName}
