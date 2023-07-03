@@ -15,6 +15,7 @@ import {
   Grow,
   Paper,
   ClickAwayListener,
+  Button,
 } from "@mui/material";
 import {
   Search,
@@ -61,8 +62,12 @@ const Navbar = () => {
     setIsMenuToggled(false);
   };
 
+  const handleClick = (event) => {
+    setIsMenuToggled(event?.currentTarget)
+  };
+
   function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
+    if (event?.key === 'Tab') {
       event.preventDefault();
       setIsMenuToggled(false);
     } else if (event.key === 'Escape') {
@@ -101,7 +106,7 @@ const Navbar = () => {
       </FlexBetween>
 
       {/* DESKTOP NAV */}
-      {isNonMobileScreens ? (
+      {isNonMobileScreens && (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
@@ -114,15 +119,15 @@ const Navbar = () => {
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
           <Tooltip title="Account settings">
-            <IconButton 
-              onClick={() => setIsMenuToggled(!isMenuToggled)}
+            <Button 
+              onClick={handleClick}
               id="menu-button" 
               aria-controls={open ? "account-menu" : undefined}
               aria-aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
               <UserImage size="40px" image={user?.picturePath} />
-            </IconButton>
+            </Button>
           </Tooltip>
           {isMenuToggled &&(
                 <ClickAwayListener onClickAway={handleClose}>
@@ -134,48 +139,15 @@ const Navbar = () => {
                     anchorEl={isMenuToggled}
                     MenuListProps={{"aria-labelledby": "menu-button"}}
                     onClose={handleClose}
+
                   >
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={() => {handleClose(); logOut();}}>Logout</MenuItem>
                   </Menu>
                 </ClickAwayListener>
-          // <FormControl variant="standard" value={fullName}>
-          //   <Select
-          //     label={fullName}
-          //     value={fullName}
-          //     sx={{
-          //       backgroundColor: neutralLight,
-          //       width: "150px",
-          //       borderRadius: "0.25rem",
-          //       p: "0.25rem 1rem",
-          //       "& .MuiSvgIcon-root": {
-          //         pr: "0.25rem",
-          //         width: "3rem",
-          //       },
-          //       "& .MuiSelect-select:focus": {
-          //         backgroundColor: neutralLight,
-          //       },
-          //     }}
-          //     input={<InputBase />}
-          //   >
-          //     <MenuItem value={fullName}>
-          //       <Typography sx={{ textTransform: "capitalize" }}>
-          //         Profile
-          //       </Typography>
-          //     </MenuItem>
-          //     <MenuItem onClick={() => logOut()}>Log Out</MenuItem>
-          //   </Select>
-          // </FormControl>
-
           )}
         </FlexBetween>
-      ) : (
-        <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-        >
-          <Menu />
-        </IconButton>
       )}
 
       {/* MOBILE NAV */}
