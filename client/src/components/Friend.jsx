@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
 import { FlexBetween, UserImage } from "../style";
 import { useEffect } from "react";
+import { patchFriendApi } from "../api/user";
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
@@ -19,18 +20,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
-  const isFriend = Array.isArray(friends) ? friends.find(e => e._id === friendId) : false;
-
-  const patchFriend = async () => {
-    try {
-      const { data } = await axios.patch(
-        `${url}/api/v1/users/${userId}/${friendId}`
-      );
-      dispatch(setFriends({friends: data.friends }));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const isFriend = Array.isArray(friends) ? (JSON.stringify(friends.find(e => e._id === friendId)) ? true : false) : (false);
 
   return (
     <FlexBetween>
@@ -63,7 +53,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
       </FlexBetween>
       {friendId !== userId ? (
         <IconButton
-          onClick={() => patchFriend()}
+          onClick={() => patchFriendApi(userId, friendId, dispatch, setFriends)}
           sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
         >
           {isFriend ? (

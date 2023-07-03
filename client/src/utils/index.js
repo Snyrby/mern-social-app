@@ -1,3 +1,4 @@
 import url from "./url";
+import { authHeader } from "./authHeader";
 
-export { url }
+export { url, authHeader }

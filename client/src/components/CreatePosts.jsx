@@ -27,6 +27,7 @@ import url from "../utils/url";
 import axios from "axios";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { createPostApi } from "../api/posts";
 
 const postSchema = yup.object().shape({
   description: yup
@@ -47,6 +48,7 @@ const CreatePosts = ({ picturePath }) => {
   const [mobileMenu, setMobileMenu] = useState(true);
   const { palette } = useTheme();
   const { userId } = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
@@ -59,13 +61,8 @@ const CreatePosts = ({ picturePath }) => {
     if (values.image) {
       formData.append("picturePath", values.image.name);
     }
-    try {
-      const { data } = await axios.post(`${url}/api/v1/posts`, formData);
-      dispatch(addPost({ posts: data.posts }));
-      onSubmitProps.resetForm();
-    } catch (error) {
-      console.log(error);
-    }
+    createPostApi(formData, dispatch, addPost, token)
+    onSubmitProps.resetForm();
   };
   return (
     <Formik

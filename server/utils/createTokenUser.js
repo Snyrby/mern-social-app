@@ -6,9 +6,7 @@ const createTokenUser = (user) => {
     role: user.role,
     location: user.location,
     occupation: user.occupation,
-    viewedProfile: user.viewedProfile,
     picturePath: user.picturePath,
-    impressions: user.impressions,
     friends: user.friends,
   };
 };

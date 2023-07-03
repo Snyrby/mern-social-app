@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillLinkedin, AiFillTwitterCircle } from "react-icons/ai";
 import { getUserInfoApi } from "../api/user";
+import { useSelector } from "react-redux";
 
 const UserInfo = ({ userId, picturePath }) => {
   const { palette } = useTheme();
@@ -18,6 +19,7 @@ const UserInfo = ({ userId, picturePath }) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const loggedInUserId = useSelector((state) => state.user.userId);
 
   useEffect(() => {
     getUserInfoApi(setUser, userId);
@@ -27,14 +29,7 @@ const UserInfo = ({ userId, picturePath }) => {
     return null;
     // TODO: loading state
   }
-  const {
-    _id: profileUserId,
-    firstName,
-    lastName,
-    location,
-    occupation,
-    friends,
-  } = user;
+  const { firstName, lastName, location, occupation, friends } = user;
   return (
     <WidgetWrapper>
       <FlexBetween gap="0.5rem" pb="1.1rem">
@@ -59,7 +54,7 @@ const UserInfo = ({ userId, picturePath }) => {
             <Typography color={medium}>{friends?.length} friends</Typography>
           </Box>
         </FlexBetween>
-        {profileUserId === userId && (
+        {loggedInUserId === userId && (
           <ManageAccountsOutlined
             onClick={() => navigate(`/edit-profile/${userId}`)}
             sx={{
@@ -69,7 +64,6 @@ const UserInfo = ({ userId, picturePath }) => {
             }}
           />
         )}
-        {/* <ManageAccountsOutlined onClick={() => navigate(`/profile/${userId}`)}/> */}
       </FlexBetween>
       <Divider />
 

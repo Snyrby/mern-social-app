@@ -3,7 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const {
   createTokenUser,
-  attachCookiesToResponse,
+  createJWT,
   checkPermissions,
 } = require("../utils");
 

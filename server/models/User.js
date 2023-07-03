@@ -50,14 +50,6 @@ const UserSchema = new mongoose.Schema(
     ],
     location: String,
     occupation: String,
-    viewedProfile: {
-      type: Number,
-      default: 0,
-    },
-    impressions: {
-      type: Number,
-      default: 0,
-    },
     verificationToken: String,
     isVerified: {
       type: Boolean,

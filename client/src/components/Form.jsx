@@ -11,12 +11,11 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLogin } from "../state";
 import Dropzone from "react-dropzone";
 import { FlexBetween } from "../style";
-import url from "../utils/url";
-import axios from "axios";
+import { registerUserApi, loginUserApi } from "../api/auth";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../state";
 
 const registerSchema = yup.object().shape({
   firstName: yup
@@ -66,20 +65,20 @@ const initialValuesLogin = {
 const Form = () => {
   const [PageType, setPageType] = useState("login");
   const { palette } = useTheme();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const isLogin = PageType === "login";
   const isRegister = PageType === "register";
 
-  const register = async (values, onSubmitProps) => {
+  const register = (values, onSubmitProps) => {
     // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
-    const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
+    const data = registerUserApi(formData);
     onSubmitProps.resetForm();
 
     if (data) {
@@ -87,17 +86,12 @@ const Form = () => {
     }
   };
 
-  const login = async (values, onSubmitProps) => {
+  const login = (values, onSubmitProps) => {
     const { email, password } = values;
     const loginUser = { email, password };
-    try {
-      const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
-      onSubmitProps.resetForm();
-      dispatch(setLogin({ user: data.user }));
-      navigate("/home");
-    } catch (error) {
-      console.log(error);
-    }
+    loginUserApi(loginUser, setLogin, dispatch);
+    onSubmitProps.resetForm();
+    navigate("/home");
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
