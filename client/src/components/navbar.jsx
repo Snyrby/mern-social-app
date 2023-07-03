@@ -16,6 +16,7 @@ import {
   Paper,
   ClickAwayListener,
   Button,
+  Container,
 } from "@mui/material";
 import {
   Search,
@@ -63,14 +64,14 @@ const Navbar = () => {
   };
 
   const handleClick = (event) => {
-    setIsMenuToggled(event?.currentTarget)
+    setIsMenuToggled(event?.currentTarget);
   };
 
   function handleListKeyDown(event) {
-    if (event?.key === 'Tab') {
+    if (event?.key === "Tab") {
       event.preventDefault();
       setIsMenuToggled(false);
-    } else if (event.key === 'Escape') {
+    } else if (event.key === "Escape") {
       setIsMenuToggled(false);
     }
   }
@@ -106,8 +107,8 @@ const Navbar = () => {
       </FlexBetween>
 
       {/* DESKTOP NAV */}
-      {isNonMobileScreens && (
-        <FlexBetween gap="2rem">
+      <FlexBetween gap="2rem">
+        {isNonMobileScreens && (
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -115,40 +116,79 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px" }} />
+        )}
+        {isNonMobileScreens ? <Message sx={{ fontSize: "25px" }} /> : undefined}
+        {isNonMobileScreens ? (
           <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
-          <Tooltip title="Account settings">
-            <Button 
-              onClick={handleClick}
-              id="menu-button" 
-              aria-controls={open ? "account-menu" : undefined}
-              aria-aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
+        ) : undefined}
+        {isNonMobileScreens ? <Help sx={{ fontSize: "25px" }} /> : undefined}
+        <Tooltip title="Account settings">
+          <Button
+            onClick={handleClick}
+            id="menu-button"
+            aria-controls={open ? "account-menu" : undefined}
+            aria-aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <UserImage size="40px" image={user?.picturePath} />
+          </Button>
+        </Tooltip>
+        {isMenuToggled && (
+          <ClickAwayListener onClickAway={handleClose}>
+            <Menu
+              open={open}
+              // autoFocusItem={isMenuToggled}
+              id="account-menu"
+              onKeyDown={handleListKeyDown}
+              anchorEl={isMenuToggled}
+              MenuListProps={{ "aria-labelledby": "menu-button" }}
+              onClose={handleClose}
             >
-              <UserImage size="40px" image={user?.picturePath} />
-            </Button>
-          </Tooltip>
-          {isMenuToggled &&(
-                <ClickAwayListener onClickAway={handleClose}>
-                  <Menu
-                    open={open}
-                    // autoFocusItem={isMenuToggled}
-                    id="account-menu"
-                    onKeyDown={handleListKeyDown}
-                    anchorEl={isMenuToggled}
-                    MenuListProps={{"aria-labelledby": "menu-button"}}
-                    onClose={handleClose}
-
-                  >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={() => {handleClose(); logOut();}}>Logout</MenuItem>
-                  </Menu>
-                </ClickAwayListener>
-          )}
-        </FlexBetween>
-      )}
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>My account</MenuItem>
+              {!isNonMobileScreens && (
+                <MenuItem onClick={() => dispatch(setMode())}>
+                  {theme.palette.mode === "dark" ? (
+                    <FlexCenter gap="0.57rem">
+                      <DarkMode sx={{ fontSize: "18px" }} />
+                      <Typography>Dark Mode</Typography>
+                    </FlexCenter>
+                  ) : (
+                    <FlexCenter gap="0.6rem">
+                      <LightMode sx={{ color: dark, fontSize: "18px" }} />
+                      <Typography color={dark}>Light Mode</Typography>
+                    </FlexCenter>
+                  )}
+                </MenuItem>
+              )}
+              {!isNonMobileScreens && (
+                <MenuItem>
+                  <Message sx={{ fontSize: "18px", marginRight:"5px" }} />
+                  <Typography color={dark}>Light Mode</Typography>
+                </MenuItem>
+              )}
+              {!isNonMobileScreens && (
+                <MenuItem>
+                  <Notifications sx={{ fontSize: "18px" }} />
+                </MenuItem>
+              )}
+              {!isNonMobileScreens && (
+                <MenuItem>
+                  <Help sx={{ fontSize: "18px" }} />
+                </MenuItem>
+              )}
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  logOut();
+                }}
+              >
+                Logout
+              </MenuItem>
+            </Menu>
+          </ClickAwayListener>
+        )}
+      </FlexBetween>
 
       {/* MOBILE NAV */}
       {!isNonMobileScreens && isMobileMenuToggled && (
