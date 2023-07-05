@@ -7,6 +7,9 @@ import Post from "./Post";
 import Friend from "./Friend";
 import Advert from "./Advert";
 import FriendList from "./FriendList";
+import Error from "./Error";
+import Comment from "./Comment";
+import ErrorBoundary from "./ErrorBoundary";
 
 export {
   Form,
@@ -18,4 +21,7 @@ export {
   Friend,
   Advert,
   FriendList,
+  Error,
+  Comment,
+  ErrorBoundary,
 };

@@ -23,11 +23,11 @@ import Dropzone from "react-dropzone";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, setPosts } from "../state";
-import url from "../utils/url";
-import axios from "axios";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { createPostApi } from "../api/posts";
+import Error from "./Error";
+import { redirect } from "react-router-dom";
 
 const postSchema = yup.object().shape({
   description: yup
@@ -57,14 +57,11 @@ const CreatePosts = ({ picturePath }) => {
   const handlePost = async (values, onSubmitProps) => {
     const formData = new FormData();
     formData.append("userId", userId);
-    formData.append("description", values.description);
-    if (values.image) {
-      formData.append("picturePath", values.image.name);
+    formData.append("description", values?.description);
+    if (values?.image) {
+      formData.append("picturePath", values?.image?.name);
     }
     createPostApi(formData, dispatch, addPost, setError);
-    if (error) {
-      console.log(error);
-    };
     onSubmitProps.resetForm();
   };
   return (
