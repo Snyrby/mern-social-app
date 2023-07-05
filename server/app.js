@@ -31,7 +31,7 @@ const root = path.join(__dirname, "../");
 
 // CONFIGURATIONS
 app.use(
-  cors({ origin: true, credentials: true, exposedHeaders: ["set-cookie"] })
+  cors({ origin: "http://localhost:3000", credentials: true })
 );
 app.set("trust proxy", 1);
 app.use(

@@ -1,22 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { url } from "../utils";
-import { useEffect } from "react";
-import axios from "axios";
-import { setLogin } from "../state";
+import { useSelector } from "react-redux";
+import { protectedRouteApi } from "../api/user";
 
 const ProtectedRoute = ({ children, ...rest }) => {
-  // useEffect(() => {
-  //   const FetchData = async () => {
-  //     const { data } = await axios.get(`${url}/api/v1/users/showMe`);
-  //     useDispatch(setLogin({user:data.user}));
-  //   }
-  //   FetchData();
-  // }, []);
   const user = useSelector((state) => state.user);
-  if (!user) {
-    return <Navigate to="/" />;
-  }
+  protectedRouteApi().then((response) => {
+    if (JSON.stringify(response) !== JSON.stringify(user)) {
+      return <Navigate to="/" />;
+    }
+  });
   return children;
 };
 export default ProtectedRoute;

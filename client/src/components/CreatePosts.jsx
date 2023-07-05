@@ -42,13 +42,13 @@ const initialPostValue = {
 };
 
 const CreatePosts = ({ picturePath }) => {
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [post, setPost] = useState("");
   const [mobileMenu, setMobileMenu] = useState(true);
   const { palette } = useTheme();
   const { userId } = useSelector((state) => state.user);
-  const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
@@ -61,7 +61,10 @@ const CreatePosts = ({ picturePath }) => {
     if (values.image) {
       formData.append("picturePath", values.image.name);
     }
-    createPostApi(formData, dispatch, addPost, token)
+    createPostApi(formData, dispatch, addPost, setError);
+    if (error) {
+      console.log(error);
+    };
     onSubmitProps.resetForm();
   };
   return (

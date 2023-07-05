@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import Error from "./components/Error";
 
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -25,7 +26,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route
+              path="/profile/:userId"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Error />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

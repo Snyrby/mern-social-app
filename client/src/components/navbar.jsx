@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../state";
 import { useNavigate } from "react-router-dom";
 import { FlexBetween, FlexCenter, UserImage } from "../style";
+import { userLogoutApi } from "../api/auth";
 
 const Navbar = () => {
   const [isMenuToggled, setIsMenuToggled] = useState(false);
@@ -41,6 +42,7 @@ const Navbar = () => {
   const anchorRef = useRef(null);
 
   const logOut = () => {
+    userLogoutApi();
     dispatch(setLogout());
   };
 

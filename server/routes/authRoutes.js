@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, login } = require("../controllers/authController");
+const { authenticateUser } = require("../middleware/authentication");
+
+const { register, login, logout } = require("../controllers/authController");
 
 router.post("/register", register); // chain base on use
 router.post("/login", login);
+router.delete("/logout", authenticateUser, logout);
 module.exports = router;

@@ -10,12 +10,26 @@ export const getUserInfoApi = async (setUser, userId) => {
   }
 };
 
-export const patchFriendApi = async (userId, friendId, dispatch, setFriends) => {
+export const patchFriendApi = async (
+  userId,
+  friendId,
+  dispatch,
+  setFriends
+) => {
   try {
     const { data } = await axios.patch(
       `${url}/api/v1/users/${userId}/${friendId}`
     );
-    dispatch(setFriends({friends: data?.friends }));
+    dispatch(setFriends({ friends: data?.friends }));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const protectedRouteApi = async () => {
+  try {
+    const { data } = await axios.get(`${url}/api/v1/users/showMe`);
+    return data.user;
   } catch (error) {
     console.log(error);
   }
