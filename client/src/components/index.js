@@ -9,7 +9,6 @@ import Advert from "./Advert";
 import FriendList from "./FriendList";
 import Error from "./Error";
 import Comment from "./Comment";
-import ErrorBoundary from "./ErrorBoundary";
 
 export {
   Form,
@@ -23,5 +22,4 @@ export {
   FriendList,
   Error,
   Comment,
-  ErrorBoundary,
 };

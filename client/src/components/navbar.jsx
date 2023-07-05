@@ -42,8 +42,9 @@ const Navbar = () => {
   const anchorRef = useRef(null);
 
   const logOut = () => {
+    navigate("/");
     userLogoutApi();
-    dispatch(setLogout());
+    return dispatch(setLogout());
   };
 
   const handleClose = (event) => {

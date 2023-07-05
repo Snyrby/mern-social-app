@@ -1,7 +1,6 @@
 import { url } from "../../utils";
 import axios from "axios";
 axios.defaults.withCredentials = true;
-
 export const patchLikeApi = async (
   loggedInUserId,
   postId,
@@ -35,7 +34,8 @@ export const createPostApi = async (formData, dispatch, addPost, setError) => {
       }
     })
     .catch((error) => {
-      return setError(error);
+      console.log(error);
+      // dispatch(setError({error: error}));
     });
 };
 

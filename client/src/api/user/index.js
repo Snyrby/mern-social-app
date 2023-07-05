@@ -26,11 +26,12 @@ export const patchFriendApi = async (
   }
 };
 
-export const protectedRouteApi = async () => {
+export const protectedRouteApi = async (dispatch) => {
   try {
     const { data } = await axios.get(`${url}/api/v1/users/showMe`);
     return data.user;
   } catch (error) {
+    // dispatch(setError({error: error}));
     console.log(error);
   }
 };

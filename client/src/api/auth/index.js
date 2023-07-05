@@ -19,10 +19,17 @@ export const registerUserApi = async (formData) => {
 };
 
 export const loginUserApi = async (loginUser, setLogin, dispatch) => {
-  try {
-    const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
-    return dispatch(setLogin({ user: data.user }));
-  } catch (error) {
-    console.log(error);
-  }
+  await axios
+    .post(`${url}/api/v1/auth/login`, loginUser)
+    .then((response) => {
+      console.log(response);
+      if (!response.ok) {
+        throw new Error(response.message);
+      } else {
+        dispatch(setLogin({ user: response.data.user }));
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

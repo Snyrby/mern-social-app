@@ -26,8 +26,7 @@ import { addPost, setPosts } from "../state";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { createPostApi } from "../api/posts";
-import Error from "./Error";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const postSchema = yup.object().shape({
   description: yup
@@ -42,7 +41,6 @@ const initialPostValue = {
 };
 
 const CreatePosts = ({ picturePath }) => {
-  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [post, setPost] = useState("");
@@ -53,6 +51,7 @@ const CreatePosts = ({ picturePath }) => {
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
   const posts = useSelector((state) => state.posts);
+  const navigate = useNavigate();
 
   const handlePost = async (values, onSubmitProps) => {
     const formData = new FormData();
@@ -61,7 +60,7 @@ const CreatePosts = ({ picturePath }) => {
     if (values?.image) {
       formData.append("picturePath", values?.image?.name);
     }
-    createPostApi(formData, dispatch, addPost, setError);
+    createPostApi(formData, dispatch, addPost);
     onSubmitProps.resetForm();
   };
   return (
