@@ -8,11 +8,12 @@ import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { FlexBetween, WidgetWrapper } from "../style";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "../state";
+import { setError, setPost } from "../state";
 import Friend from "./Friend";
 import Comment from "./Comment";
 import { patchLikeApi } from "../api/posts";
 import { getCommentsApi } from "../api/comments";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({
   postId,
@@ -28,6 +29,7 @@ const Post = ({
   const [isComment, setIsComment] = useState(false);
   const [comments, setComments] = useState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const loggedInUserId = useSelector((state) => state.user.userId);
   const isLiked = Array.isArray(likes) ? likes.includes(loggedInUserId) : false;
   const likesCount = [...likes].length;
@@ -39,6 +41,15 @@ const Post = ({
   const commentClickHandler = () => {
     setIsComment(!isComment);
     getCommentsApi(setComments, postId);
+  };
+
+  const likeClickHandler = () => {
+    patchLikeApi(loggedInUserId, postId).then((response) => {
+      dispatch(setPost({ post: response}))
+    }).catch((error) => {
+      dispatch(setError({ error: error.response.data.msg }));
+      return navigate(`/error/${error.request.status}`);
+    });
   };
   return (
     <WidgetWrapper m="2rem 0">
@@ -64,9 +75,7 @@ const Post = ({
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
             <IconButton
-              onClick={() =>
-                patchLikeApi(loggedInUserId, postId, dispatch, setPost)
-              }
+              onClick={likeClickHandler}
             >
               {isLiked ? (
                 <FavoriteOutlined sx={{ color: primary }} />

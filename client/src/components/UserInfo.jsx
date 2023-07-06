@@ -22,7 +22,13 @@ const UserInfo = ({ userId, picturePath }) => {
   const loggedInUserId = useSelector((state) => state.user.userId);
 
   useEffect(() => {
-    getUserInfoApi(setUser, userId);
+    getUserInfoApi(userId)
+      .then((response) => {
+        setUser(response);
+      })
+      .catch(() => {
+        return navigate("/");
+      });
   }, []);
 
   if (!user) {

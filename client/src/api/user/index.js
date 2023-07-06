@@ -1,13 +1,9 @@
 import { url } from "../../utils";
 import axios from "axios";
 
-export const getUserInfoApi = async (setUser, userId) => {
-  try {
-    const { data } = await axios.get(`${url}/api/v1/users/${userId}`);
-    return setUser(data.user);
-  } catch (error) {
-    console.log(error);
-  }
+export const getUserInfoApi = async (userId) => {
+  const { data } = await axios.get(`${url}/api/v1/users/${userId}`);
+  return data.user;
 };
 
 export const patchFriendApi = async (
@@ -26,12 +22,7 @@ export const patchFriendApi = async (
   }
 };
 
-export const protectedRouteApi = async (dispatch) => {
-  try {
-    const { data } = await axios.get(`${url}/api/v1/users/showMe`);
-    return data.user;
-  } catch (error) {
-    // dispatch(setError({error: error}));
-    console.log(error);
-  }
+export const protectedRouteApi = async () => {
+  const { data } = await axios.get(`${url}/api/v1/users/showMe`);
+  return data.user;
 };

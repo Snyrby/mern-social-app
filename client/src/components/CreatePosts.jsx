@@ -22,7 +22,7 @@ import { FlexBetween, UserImage, WidgetWrapper } from "../style";
 import Dropzone from "react-dropzone";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, setPosts } from "../state";
+import { addPost, setError } from "../state";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { createPostApi } from "../api/posts";
@@ -43,14 +43,12 @@ const initialPostValue = {
 const CreatePosts = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
-  const [post, setPost] = useState("");
   const [mobileMenu, setMobileMenu] = useState(true);
   const { palette } = useTheme();
   const { userId } = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
-  const posts = useSelector((state) => state.posts);
   const navigate = useNavigate();
 
   const handlePost = async (values, onSubmitProps) => {
@@ -60,8 +58,15 @@ const CreatePosts = ({ picturePath }) => {
     if (values.image) {
       formData.append("picturePath", values.image.name);
     }
-    createPostApi(formData, dispatch, addPost);
-    onSubmitProps.resetForm();
+    createPostApi(formData)
+      .then((response) => {
+        dispatch(addPost({ posts: response }));
+        onSubmitProps.resetForm();
+      })
+      .catch((error) => {
+        dispatch(setError({ error: error.response.data.msg }));
+        return navigate(`/error/${error.request.status}`);
+      });
   };
   return (
     <Formik
@@ -219,9 +224,7 @@ const CreatePosts = ({ picturePath }) => {
                   </Box>
                 </FlexBetween>
               </>
-            ) : (
-              null
-            )}
+            ) : null}
           </WidgetWrapper>
         </form>
       )}

@@ -16,7 +16,7 @@ import { FlexBetween, FlexCenter } from "../style";
 import { registerUserApi, loginUserApi } from "../api/auth";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
-import Error from "./Error";
+import Error from "./ErrorHandler";
 
 const registerSchema = yup.object().shape({
   firstName: yup
@@ -82,12 +82,15 @@ const Form = () => {
     formData.append("picturePath", values.picture.name);
     registerUserApi(formData)
       .then((response) => {
-        onSubmitProps.resetForm();
+        if (response) {
+          onSubmitProps.resetForm();
+          setPageType("login");
+        }
         // TODO: Alert for message
       })
       .catch((error) => {
         setErrorMessage(error.response.data.msg);
-      }).finally(() => {setPageType("login");});
+      });
   };
 
   const login = async (values, onSubmitProps) => {
@@ -222,13 +225,6 @@ const Form = () => {
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
             />
-            {errorMessage && (
-              <FlexCenter>
-                <Typography color="red" variant="h6">
-                  {errorMessage}
-                </Typography>
-              </FlexCenter>
-            )}
             <TextField
               name="password"
               label="Password"
@@ -267,6 +263,7 @@ const Form = () => {
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");
+                setErrorMessage("");
                 resetForm();
               }}
               sx={{

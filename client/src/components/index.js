@@ -7,7 +7,7 @@ import Post from "./Post";
 import Friend from "./Friend";
 import Advert from "./Advert";
 import FriendList from "./FriendList";
-import Error from "./Error";
+import ErrorHandler from "./ErrorHandler";
 import Comment from "./Comment";
 
 export {
@@ -20,6 +20,6 @@ export {
   Friend,
   Advert,
   FriendList,
-  Error,
+  ErrorHandler,
   Comment,
 };

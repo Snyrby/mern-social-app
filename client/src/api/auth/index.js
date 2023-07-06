@@ -10,12 +10,8 @@ export const userLogoutApi = async () => {
 };
 
 export const registerUserApi = async (formData) => {
-  try {
-    const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
-    return data.msg;
-  } catch (error) {
-    console.log(error);
-  }
+  const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
+  return data.msg;
 };
 
 export const loginUserApi = async (loginUser, setLogin, dispatch) => {
