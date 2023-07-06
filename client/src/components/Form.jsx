@@ -66,7 +66,7 @@ const initialValuesLogin = {
 const Form = () => {
   const [PageType, setPageType] = useState("login");
   const { palette } = useTheme();
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -98,8 +98,10 @@ const Form = () => {
         navigate("/home");
       })
       .catch((error) => {
-        console.log(error);
-        navigate(`/error/${error.request.status}`);
+        console.log(error.request);
+        // setErrorMessage(error.request.resonse.msg);
+        // console.log(errorMessage);
+        // navigate(`/error/${error.request.status}`);
       });
   };
 
