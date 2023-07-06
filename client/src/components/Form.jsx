@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
-import { FlexBetween } from "../style";
+import { FlexBetween, FlexCenter } from "../style";
 import { registerUserApi, loginUserApi } from "../api/auth";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
@@ -80,12 +80,14 @@ const Form = () => {
       formData.append(value, values[value]);
     }
     formData.append("picturePath", values.picture.name);
-    const data = registerUserApi(formData);
-    onSubmitProps.resetForm();
-
-    if (data) {
-      setPageType("login");
-    }
+    registerUserApi(formData)
+      .then((response) => {
+        onSubmitProps.resetForm();
+        // TODO: Alert for message
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.msg);
+      }).finally(() => {setPageType("login");});
   };
 
   const login = async (values, onSubmitProps) => {
@@ -98,10 +100,7 @@ const Form = () => {
         navigate("/home");
       })
       .catch((error) => {
-        console.log(error.request);
-        // setErrorMessage(error.request.resonse.msg);
-        // console.log(errorMessage);
-        // navigate(`/error/${error.request.status}`);
+        setErrorMessage(error.response.data.msg);
       });
   };
 
@@ -223,6 +222,13 @@ const Form = () => {
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
             />
+            {errorMessage && (
+              <FlexCenter>
+                <Typography color="red" variant="h6">
+                  {errorMessage}
+                </Typography>
+              </FlexCenter>
+            )}
             <TextField
               name="password"
               label="Password"
@@ -238,11 +244,18 @@ const Form = () => {
 
           {/* Buttons */}
           <Box>
+            {errorMessage && (
+              <FlexCenter m="1rem 0 0">
+                <Typography color="red" variant="h6">
+                  {errorMessage}
+                </Typography>
+              </FlexCenter>
+            )}
             <Button
               type="submit"
               fullWidth
               sx={{
-                m: "2rem 0",
+                m: errorMessage ? "1rem 0" : "2rem 0",
                 p: "1rem",
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,

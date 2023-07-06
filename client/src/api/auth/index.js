@@ -12,7 +12,7 @@ export const userLogoutApi = async () => {
 export const registerUserApi = async (formData) => {
   try {
     const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
-    return data;
+    return data.msg;
   } catch (error) {
     console.log(error);
   }
