@@ -30,25 +30,25 @@ const Navbar = () => {
   const open = Boolean(isMenuToggled);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state?.user);
+  const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const theme = useTheme();
-  const neutralLight = theme?.palette?.neutral?.light;
-  const dark = theme?.palette?.neutral?.dark;
-  const background = theme?.palette?.background?.default;
-  const primaryLight = theme?.palette?.primary?.light;
-  const alt = theme?.palette?.background?.alt;
-  const fullName = `${user?.firstName} ${user?.lastName}`;
+  const neutralLight = theme.palette.neutral.light;
+  const dark = theme.palette.neutral.dark;
+  const background = theme.palette.background.default;
+  const primaryLight = theme.palette.primary.light;
+  const alt = theme.palette.background.alt;
+  const fullName = `${user.firstName} ${user.lastName}`;
   const anchorRef = useRef(null);
 
   const logOut = () => {
-    navigate("/");
     userLogoutApi();
-    return dispatch(setLogout());
+    dispatch(setLogout());
+    navigate("/");
   };
 
   const handleClose = (event) => {
-    if (anchorRef?.current?.contains(event?.target)) {
+    if (anchorRef.current?.contains(event.target)) {
       return;
     }
 
@@ -56,11 +56,11 @@ const Navbar = () => {
   };
 
   const handleClick = (event) => {
-    setIsMenuToggled(event?.currentTarget);
+    setIsMenuToggled(event.currentTarget);
   };
 
   function handleListKeyDown(event) {
-    if (event?.key === "Tab") {
+    if (event.key === "Tab") {
       event.preventDefault();
       setIsMenuToggled(false);
     } else if (event.key === "Escape") {
@@ -123,7 +123,7 @@ const Navbar = () => {
             aria-aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <UserImage size="40px" image={user?.picturePath} />
+            <UserImage size="40px" image={user.picturePath} />
           </Button>
         </Tooltip>
         {isMenuToggled && (

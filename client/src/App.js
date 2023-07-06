@@ -34,6 +34,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/error/:code" element={<Error />} />
             <Route path="*" element={<Error />} />
           </Routes>
         </ThemeProvider>

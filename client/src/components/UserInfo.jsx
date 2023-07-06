@@ -51,7 +51,7 @@ const UserInfo = ({ userId, picturePath }) => {
             >
               {firstName} {lastName}
             </Typography>
-            <Typography color={medium}>{friends?.length} friends</Typography>
+            <Typography color={medium}>{friends.length} friends</Typography>
           </Box>
         </FlexBetween>
         {loggedInUserId === userId && (

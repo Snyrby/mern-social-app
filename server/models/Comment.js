@@ -35,7 +35,7 @@ CommentSchema.statics.calcTotalPostComments = async function (postId) {
     await this.model("Post").findOneAndUpdate(
       { _id: postId },
       {
-        numOfPosts: result[0]?.numOfPosts || 0,
+        numOfPosts: result[0].numOfPosts || 0,
       }
     );
   } catch (error) {

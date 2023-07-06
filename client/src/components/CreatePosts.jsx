@@ -56,9 +56,9 @@ const CreatePosts = ({ picturePath }) => {
   const handlePost = async (values, onSubmitProps) => {
     const formData = new FormData();
     formData.append("userId", userId);
-    formData.append("description", values?.description);
-    if (values?.image) {
-      formData.append("picturePath", values?.image?.name);
+    formData.append("description", values.description);
+    if (values.image) {
+      formData.append("picturePath", values.image.name);
     }
     createPostApi(formData, dispatch, addPost);
     onSubmitProps.resetForm();

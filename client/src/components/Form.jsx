@@ -16,6 +16,7 @@ import { FlexBetween } from "../style";
 import { registerUserApi, loginUserApi } from "../api/auth";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
+import Error from "./Error";
 
 const registerSchema = yup.object().shape({
   firstName: yup
@@ -65,6 +66,7 @@ const initialValuesLogin = {
 const Form = () => {
   const [PageType, setPageType] = useState("login");
   const { palette } = useTheme();
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -86,12 +88,19 @@ const Form = () => {
     }
   };
 
-  const login = (values, onSubmitProps) => {
+  const login = async (values, onSubmitProps) => {
     const { email, password } = values;
     const loginUser = { email, password };
-    loginUserApi(loginUser, setLogin, dispatch);
-    onSubmitProps.resetForm();
-    navigate("/home");
+    loginUserApi(loginUser)
+      .then((response) => {
+        dispatch(setLogin({ user: response }));
+        onSubmitProps.resetForm();
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+        navigate(`/error/${error.request.status}`);
+      });
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {

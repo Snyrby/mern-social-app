@@ -27,7 +27,7 @@ const createComment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     const { postId } = req.params;
-    const comments = await Comment?.find({ post: postId }).populate({
+    const comments = await Comment.find({ post: postId }).populate({
         path: "user",
         select: "firstName lastName picturePath",
     });
