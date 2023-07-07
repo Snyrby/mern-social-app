@@ -16,7 +16,6 @@ import { FlexBetween, FlexCenter } from "../style";
 import { registerUserApi, loginUserApi } from "../api/auth";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state";
-import Error from "./ErrorHandler";
 
 const registerSchema = yup.object().shape({
   firstName: yup

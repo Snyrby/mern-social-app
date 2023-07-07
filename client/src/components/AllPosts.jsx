@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setError, setPosts } from "../state";
-import Post from "./Post";
+import { Post } from "../components";
 import { getPostsApi, getUserPostsApi } from "../api/posts";
 import { useNavigate } from "react-router-dom";
 

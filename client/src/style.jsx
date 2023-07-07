@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 
 export const FlexBetween = styled(Box)({
   display: "flex",
@@ -17,6 +16,11 @@ export const FlexCenter = styled(Box)({
   justifyContent: "center",
   alignItems: "center",
 });
+export const FlexEnd = styled(Box)({
+  display: "flex",
+  justifyContent: "end",
+  alignItems: "center",
+});
 
 export const WidgetWrapper = styled(Box)(({ theme }) => ({
   padding: "1.5rem 1.5rem 0.75rem",
@@ -25,7 +29,6 @@ export const WidgetWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const UserImage = ({ image, size = "60px" }) => {
-  const navigate = useNavigate();
   return (
     <Box width={size} height={size}>
       <img

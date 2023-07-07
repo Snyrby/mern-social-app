@@ -9,8 +9,7 @@ import { FlexBetween, WidgetWrapper } from "../style";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setError, setPost } from "../state";
-import Friend from "./Friend";
-import Comment from "./Comment";
+import { Comment, Friend, AddComment } from "../components";
 import { patchLikeApi } from "../api/posts";
 import { getCommentsApi } from "../api/comments";
 import { useNavigate } from "react-router-dom";
@@ -98,6 +97,7 @@ const Post = ({
       </FlexBetween>
       {isComment && (
         <Box mt="0.5rem">
+          <AddComment />
           {comments
             ? comments.comments.map((comment, index) => (
                 <Comment

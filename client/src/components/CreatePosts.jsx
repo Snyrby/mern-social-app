@@ -27,6 +27,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { createPostApi } from "../api/posts";
 import { useNavigate } from "react-router-dom";
+import { CustomButton } from "../components";
 
 const postSchema = yup.object().shape({
   description: yup
@@ -176,7 +177,6 @@ const CreatePosts = ({ picturePath }) => {
                   </FlexBetween>
                 </>
               ) : (
-                // TODO: ADD values on click
                 <FlexBetween gap="0.25rem">
                   {mobileMenu ? (
                     <MoreHorizOutlined
@@ -191,21 +191,7 @@ const CreatePosts = ({ picturePath }) => {
                   )}
                 </FlexBetween>
               )}
-              <Button
-                disabled={!values.description}
-                type="submit"
-                sx={{
-                  color: palette.background.alt,
-                  backgroundColor: palette.primary.main,
-                  borderRadius: "3rem",
-                  "&:hover": {
-                    cursor: "pointer",
-                    color: palette.primary.main,
-                  },
-                }}
-              >
-                Create Post
-              </Button>
+              <CustomButton values={values} text="Create Post" />
             </FlexBetween>
             {!isNonMobileScreens && !mobileMenu ? (
               <>

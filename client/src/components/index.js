@@ -9,6 +9,8 @@ import Advert from "./Advert";
 import FriendList from "./FriendList";
 import ErrorHandler from "./ErrorHandler";
 import Comment from "./Comment";
+import AddComment from "./AddComment";
+import CustomButton from "./CustomButton";
 
 export {
   Form,
@@ -22,4 +24,6 @@ export {
   FriendList,
   ErrorHandler,
   Comment,
+  AddComment,
+  CustomButton,
 };
