@@ -18,7 +18,7 @@ export const FlexCenter = styled(Box)({
 });
 export const FlexEnd = styled(Box)({
   display: "flex",
-  justifyContent: "end",
+  justifyContent: "flex-end",
   alignItems: "center",
 });
 

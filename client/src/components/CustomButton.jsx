@@ -1,16 +1,18 @@
 import { Button, useTheme } from "@mui/material";
 import React from "react";
 
-const CustomButton = ({ values, text }) => {
+const CustomButton = ({ values, text, comment, cancel }) => {
     const { palette } = useTheme();
   return (
     <Button
-      disabled={!values?.description}
-      type="submit"
+      disabled={!comment ? !values?.description : null}
+      type={!cancel ? "submit" : "reset"}
       sx={{
         color: palette.background.alt,
-        backgroundColor: palette.primary.main,
+        backgroundColor: !cancel ? palette.primary.main : palette.neutral.medium,
         borderRadius: "3rem",
+        marginLeft: cancel ? "20px" : "0",
+        fontSize: comment && "0.6rem",
         "&:hover": {
           cursor: "pointer",
           color: palette.primary.main,

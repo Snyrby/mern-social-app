@@ -1,20 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { protectedRouteApi } from "../api/user";
+import { setLogin } from "../state";
+import { useEffect } from "react";
 
 const ProtectedRoute = ({ children, ...rest }) => {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  protectedRouteApi(dispatch)
-    .then((response) => {
-      if (JSON.stringify(response) !== JSON.stringify(user)) {
+  useEffect(() => {
+    protectedRouteApi()
+      .then((response) => {
+        !user && dispatch(setLogin({ user: response }));
+        if (JSON.stringify(response) !== JSON.stringify(user)) {
+          return <Navigate to={"/"} />;
+        }
+      })
+      .catch(() => {
         return navigate("/");
-      }
-    })
-    .catch(() => {
-      return navigate("/");
-    });
-  return children;
+      });
+    }, []);
+    return user ? (children ? children : <Outlet />) : null;
 };
 export default ProtectedRoute;

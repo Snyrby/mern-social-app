@@ -6,6 +6,7 @@ const initialState = {
   token: null,
   posts: [],
   error: null,
+  comments: [],
 };
 
 export const authSlice = createSlice({
@@ -49,9 +50,21 @@ export const authSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload.error;
     },
+    setComments: (state, action) => {
+      state.comments = action.payload.comments;
+      const updatedPosts = state.posts.map((post) => {
+        console.log(post);
+        if (post._id === action.payload.postId) {
+          post.numOfComments += 1;
+        }
+      });
+    },
+    addComment: (state, action) => {
+      state.comments.push(action.payload.comments);
+    },
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, addPost, setError } =
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, addPost, setError, setComments, addComment } =
   authSlice.actions;
 export default authSlice.reducer;

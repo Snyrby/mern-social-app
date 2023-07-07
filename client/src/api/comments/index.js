@@ -1,11 +1,20 @@
 import { url } from "../../utils";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
-export const getCommentsApi = async (setComments, postId) => {
-  try {
-    const { data } = await axios.get(`${url}/api/v1/comments/${postId}`);
-    setComments({ comments: data.comments });
-  } catch (error) {
-    console.log(error);
-  }
+export const getCommentsApi = async (postId) => {
+  const { data } = await axios.get(`${url}/api/v1/comments/${postId}`, {
+    withCredentials: true,
+  });
+  return data.comments;
+};
+
+export const createCommentApi = async (comment) => {
+  console.log(comment);
+  const { data } = await axios.post(
+    `${url}/api/v1/comments/`,
+    comment,
+    { withCredentials: true }
+  );
+  return data.comment;
 };

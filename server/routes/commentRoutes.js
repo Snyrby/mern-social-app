@@ -7,7 +7,7 @@ const {
     getAllComments 
 } = require("../controllers/commentController");
 
-router.route("/:postId").get(getAllComments);
+router.route("/:postId").get(authenticateUser, getAllComments);
 router.route("/").post(authenticateUser, createComment);
 
 module.exports = router;

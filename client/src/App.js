@@ -17,25 +17,22 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route exact path="/" element={<LoginPage />} />
-            <Route
-              exact
-              path="/home"
-              element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile/:userId"
-              element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              }
-            />
+            <Route element={<ProtectedRoute />}>
+              <Route exact path="/home" element={<HomePage />} />
+              <Route path="/profile/:userId" element={<ProfilePage />} />
+            </Route>
             <Route path="/error/:code" element={<ErrorHandler />} />
-            <Route path="*" element={<ErrorHandler notFoundCode={404} notFoundMessage={"We can't seem to find the page you're looking for"}/>} />
+            <Route
+              path="*"
+              element={
+                <ErrorHandler
+                  notFoundCode={404}
+                  notFoundMessage={
+                    "We can't seem to find the page you're looking for"
+                  }
+                />
+              }
+            />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

@@ -22,7 +22,6 @@ const createPost = async (req, res) => {
     path: "user",
     select: "firstName lastName picturePath location",
   });
-  console.log(posts);
   res.status(StatusCodes.CREATED).json({ posts });
 };
 

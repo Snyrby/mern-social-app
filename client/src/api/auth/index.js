@@ -14,7 +14,7 @@ export const registerUserApi = async (formData) => {
   return data.msg;
 };
 
-export const loginUserApi = async (loginUser, setLogin, dispatch) => {
+export const loginUserApi = async (loginUser) => {
     const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
     return data.user;
 };
