@@ -21,40 +21,4 @@ const CommentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-CommentSchema.statics.calcTotalPostComments = async function (postId) {
-  const result = await this.aggregate([
-    { $match: { post: postId } },
-    {
-      $group: {
-        _id: "$post",
-        numOfPosts: { $sum: 1 },
-      },
-    },
-  ]);
-  try {
-    await this.model("Post").findOneAndUpdate(
-      { _id: postId },
-      {
-        numOfPosts: result[0].numOfPosts || 0,
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
-  try {
-    await this.model("deleteOne").findOneAndUpdate(
-      { _id: postId },
-      {
-        numOfPosts: result[0].numOfPosts || 0,
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-CommentSchema.post("save", async function () {
-  await this.constructor.calcTotalPostComments(this.post);
-});
-
 module.exports = mongoose.model("Comment", CommentSchema);

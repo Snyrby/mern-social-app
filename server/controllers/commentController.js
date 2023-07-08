@@ -3,6 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const Post = require("../models/Post");
 const User = require("../models/User");
+const { checkPermissions } = require("../utils");
 
 const createComment = async (req, res) => {
   const { userId, postId, description } = req.body;
@@ -25,7 +26,7 @@ const createComment = async (req, res) => {
     select: "firstName lastName picturePath",
   });
   isValidPost.numOfComments += 1;
-  isValidPost.save();
+  await isValidPost.save();
   res.status(StatusCodes.CREATED).json({ comment });
 };
 
@@ -44,7 +45,7 @@ const deleteComment = async (req, res) => {
   const { userId } = req.user;
   const comment = await Comment.findOne({ _id: req.params.commentId });
   const user = await User.findOne({ _id: userId });
-  const post = await Post.findOne({ _id: req.body.postId });
+  const post = await Post.findOne({ _id: comment.post });
   if (!comment) {
     throw new CustomError.NotFoundError(`No comment with id : ${commentId}`);
   }
@@ -54,10 +55,14 @@ const deleteComment = async (req, res) => {
   if (!post) {
     throw new CustomError.NotFoundError(`No comment with id : ${postId}`);
   }
-  if (userId !== post.user || userId !== comment.user) {
-    throw new CustomError.UnauthorizedError("You may not delete a comment");
+  if (userId !== comment.user.toString() && userId !== post.user.toString()) {
+    throw new CustomError.UnauthorizedError(
+      'Not authorized to access this route'
+    );
   }
   await comment.deleteOne();
+  post.numOfComments -= 1;
+  await post.save();
   res.status(StatusCodes.OK).json({ msg: "Comment deleted successfully" });
 };
 

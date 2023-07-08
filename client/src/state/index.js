@@ -52,19 +52,35 @@ export const authSlice = createSlice({
     },
     setComments: (state, action) => {
       state.comments = action.payload.comments;
-      const updatedPosts = state.posts.map((post) => {
-        console.log(post);
+      state.posts.map((post) => {
         if (post._id === action.payload.postId) {
           post.numOfComments += 1;
         }
       });
     },
-    addComment: (state, action) => {
-      state.comments.push(action.payload.comments);
+    deleteComment: (state, action) => {
+      const filteredArray = state.comments.filter(comment => comment._id !== action.payload.commentId);
+      console.log(filteredArray);
+      state.comments = filteredArray;
+      state.posts.map((post) => {
+        if (post._id === action.payload.postId) {
+          post.numOfComments -= 1;
+        }
+      });
     },
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, addPost, setError, setComments, addComment } =
-  authSlice.actions;
+export const {
+  setMode,
+  setLogin,
+  setLogout,
+  setFriends,
+  setPosts,
+  setPost,
+  addPost,
+  setError,
+  setComments,
+  deleteComment,
+} = authSlice.actions;
 export default authSlice.reducer;

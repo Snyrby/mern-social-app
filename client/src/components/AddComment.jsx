@@ -28,7 +28,7 @@ const AddComment = ({ postId, comments }) => {
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const navigate = useNavigate();
 
-  const handleSubmit = async (values, onSubmitProps) => {
+  const handleSubmit = (values, onSubmitProps) => {
     const comment = { postId, userId, description: values.description };
     createCommentApi(comment)
       .then((response) => {

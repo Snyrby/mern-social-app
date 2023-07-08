@@ -10,18 +10,34 @@ import React from "react";
 import { FlexBetween, FlexCenter, FlexStart, UserImage } from "../style";
 import { useNavigate } from "react-router-dom";
 import { Delete } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCommentApi } from "../api/comments";
+import { deleteComment, setError } from "../state";
 
 const Comment = ({
+  commentId,
+  postId,
   name,
   picturePath,
   description,
   commentUserId,
   postUserId,
-  loggedInUserId,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { palette } = useTheme();
   const main = palette.neutral.main;
+  const { userId, role } = useSelector((state) => state.user);
+  const handleDeleteClick = () => {
+    deleteCommentApi(commentId)
+      .then((response) => {
+        dispatch(deleteComment({ commentId, postId }));
+      })
+      .catch((error) => {
+        dispatch(setError({ error: error.response.data.msg }));
+        return navigate(`/error/${error.request.status}`);
+      });
+  };
   return (
     <Box display="flex" flexDirection="column" alignItems="flex-start">
       <Divider width="100%" />
@@ -55,14 +71,15 @@ const Comment = ({
             </Typography>
           </FlexStart>
         </FlexStart>
-        {loggedInUserId === postUserId ||
-          (loggedInUserId === commentUserId && (
-            <Tooltip title="Delete">
-              <IconButton>
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          ))}
+        {role === "admin" ||
+        userId === commentUserId ||
+        userId === postUserId ? (
+          <Tooltip title="Delete">
+            <IconButton onClick={handleDeleteClick}>
+              <Delete />
+            </IconButton>
+          </Tooltip>
+        ) : null}
       </FlexBetween>
     </Box>
   );

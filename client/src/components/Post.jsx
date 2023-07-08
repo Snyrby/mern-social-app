@@ -121,12 +121,13 @@ const Post = ({
           {comments ? (
             comments.map((comment, index) => (
               <Comment
+                commentId={comment._id}
+                postId={postId}
                 name={`${comment.user.firstName} ${comment.user.lastName}`}
                 picturePath={comment.user.picturePath}
                 description={comment.description}
                 commentUserId={comment.user._id}
                 postUserId={postUserId}
-                loggedInUserId={loggedInUserId}
                 key={`${name}-${index}`}
               />
             ))
