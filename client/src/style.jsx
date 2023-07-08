@@ -8,8 +8,8 @@ export const FlexBetween = styled(Box)({
 });
 export const FlexStart = styled(Box)({
   display: "flex",
-  justifyContent: "start",
-  alignItems: "center",
+  justifyContent: "flex-start",
+  alignItems: "flex-start",
 });
 export const FlexCenter = styled(Box)({
   display: "flex",

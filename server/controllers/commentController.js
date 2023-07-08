@@ -40,7 +40,30 @@ const getAllComments = async (req, res) => {
   res.status(StatusCodes.OK).json({ comments });
 };
 
+const deleteComment = async (req, res) => {
+  const { userId } = req.user;
+  const comment = await Comment.findOne({ _id : req.params.commentId });
+  const user = await User.findOne({ _id : userId })
+  const post = await Post.findOne({ _id : req.body.postId })
+  if (!comment) {
+    throw new CustomError.NotFoundError(`No comment with id : ${commentId}`);
+  }
+  if (!user) {
+    throw new CustomError.NotFoundError(`No User with id : ${userId}`);
+  }
+  if (!post) {
+    throw new CustomError.NotFoundError(`No comment with id : ${postId}`);
+  }
+  if (userId !== post.user || userId !== comment.user) {
+    throw new CustomError.UnauthorizedError("You may not delete a comment")
+  }
+  await comment.deleteOne();
+  res.status(StatusCodes.OK).json({user: req.user});
+
+};
+
 module.exports = {
   createComment,
   getAllComments,
+  deleteComment,
 };

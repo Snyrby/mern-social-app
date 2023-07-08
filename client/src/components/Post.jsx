@@ -4,7 +4,14 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { FlexBetween, WidgetWrapper } from "../style";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -82,25 +89,31 @@ const Post = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={likeClickHandler}>
-              {isLiked ? (
-                <FavoriteOutlined sx={{ color: primary }} />
-              ) : (
-                <FavoriteBorderOutlined />
-              )}
-            </IconButton>
+            <Tooltip title="Like">
+              <IconButton onClick={likeClickHandler}>
+                {isLiked ? (
+                  <FavoriteOutlined sx={{ color: primary }} />
+                ) : (
+                  <FavoriteBorderOutlined />
+                )}
+              </IconButton>
+            </Tooltip>
             <Typography>{likesCount}</Typography>
           </FlexBetween>
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={commentClickHandler}>
-              <ChatBubbleOutlineOutlined />
-            </IconButton>
+            <Tooltip title="Comment">
+              <IconButton onClick={commentClickHandler}>
+                <ChatBubbleOutlineOutlined />
+              </IconButton>
+            </Tooltip>
             <Typography>{commentsLength}</Typography>
           </FlexBetween>
         </FlexBetween>
-        <IconButton>
-          <ShareOutlined />
-        </IconButton>
+        <Tooltip title="Share">
+          <IconButton>
+            <ShareOutlined />
+          </IconButton>
+        </Tooltip>
       </FlexBetween>
       {isComment && (
         <Box mt="0.5rem">
@@ -112,6 +125,8 @@ const Post = ({
                 picturePath={comment.user.picturePath}
                 description={comment.description}
                 commentUserId={comment.user._id}
+                postUserId={postUserId}
+                loggedInUserId={loggedInUserId}
                 key={`${name}-${index}`}
               />
             ))

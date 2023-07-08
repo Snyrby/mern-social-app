@@ -41,6 +41,16 @@ CommentSchema.statics.calcTotalPostComments = async function (postId) {
   } catch (error) {
     console.log(error);
   }
+  try {
+    await this.model("deleteOne").findOneAndUpdate(
+      { _id: postId },
+      {
+        numOfPosts: result[0].numOfPosts || 0,
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 CommentSchema.post("save", async function () {

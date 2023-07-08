@@ -10,7 +10,6 @@ export const getCommentsApi = async (postId) => {
 };
 
 export const createCommentApi = async (comment) => {
-  console.log(comment);
   const { data } = await axios.post(
     `${url}/api/v1/comments/`,
     comment,
