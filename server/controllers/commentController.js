@@ -44,14 +44,14 @@ const getAllComments = async (req, res) => {
 const deleteComment = async (req, res) => {
   const { userId } = req.user;
   const comment = await Comment.findOne({ _id: req.params.commentId });
-  const user = await User.findOne({ _id: userId });
-  const post = await Post.findOne({ _id: comment.post });
   if (!comment) {
     throw new CustomError.NotFoundError(`No comment with id : ${commentId}`);
   }
+  const user = await User.findOne({ _id: userId });
   if (!user) {
     throw new CustomError.NotFoundError(`No User with id : ${userId}`);
   }
+  const post = await Post.findOne({ _id: comment.post });
   if (!post) {
     throw new CustomError.NotFoundError(`No comment with id : ${postId}`);
   }

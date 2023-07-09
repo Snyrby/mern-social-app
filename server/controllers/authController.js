@@ -57,13 +57,13 @@ const register = async (req, res) => {
     picturePath: userImage.name,
     friends,
   });
-  // const origin = "http://localhost:3000";
-  // await sendVerificationEmail({
-  //   name: user.firstName,
-  //   email: user.email,
-  //   verificationToken: user.verificationToken,
-  //   origin,
-  // });
+  const origin = "http://localhost:3000";
+  await sendVerificationEmail({
+    name: user.firstName,
+    email: user.email,
+    verificationToken: user.verificationToken,
+    origin,
+  });
   res
     .status(StatusCodes.CREATED)
     .json({ msg: "Success! Please check you email for verification" });

@@ -1,6 +1,6 @@
 import { React, useMemo } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HomePage, LoginPage, ProfilePage, ProtectedRoute } from "./pages";
+import { HomePage, LoginPage, ProfilePage, ProtectedRoute, VerifyEmailPage } from "./pages";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
@@ -21,6 +21,7 @@ function App() {
               <Route exact path="/home" element={<HomePage />} />
               <Route path="/profile/:userId" element={<ProfilePage />} />
             </Route>
+            <Route path="/user/verify-email" element={<VerifyEmailPage />} />
             <Route path="/error/:code" element={<ErrorHandler />} />
             <Route
               path="*"

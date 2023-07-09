@@ -15,7 +15,7 @@ import Dropzone from "react-dropzone";
 import { FlexBetween, FlexCenter } from "../style";
 import { registerUserApi, loginUserApi } from "../api/auth";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../state";
+import { setAlert, setLogin } from "../state";
 
 const registerSchema = yup.object().shape({
   firstName: yup
@@ -63,6 +63,7 @@ const initialValuesLogin = {
 };
 
 const Form = () => {
+  const [loading, setLoading] = useState(false);
   const [PageType, setPageType] = useState("login");
   const { palette } = useTheme();
   const [errorMessage, setErrorMessage] = useState("");
@@ -73,7 +74,7 @@ const Form = () => {
   const isRegister = PageType === "register";
 
   const register = (values, onSubmitProps) => {
-    // this allows us to send form info with image
+    setLoading(true);
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
@@ -81,27 +82,31 @@ const Form = () => {
     formData.append("picturePath", values.picture.name);
     registerUserApi(formData)
       .then((response) => {
-        if (response) {
-          onSubmitProps.resetForm();
-          setPageType("login");
-        }
-        // TODO: Alert for message
+        console.log(response);
+        onSubmitProps.resetForm();
+        dispatch(setAlert({ alert: response }));
+        setLoading(false);
+        setPageType("login");
       })
       .catch((error) => {
+        setLoading(false);
         setErrorMessage(error.response.data.msg);
       });
   };
 
   const login = async (values, onSubmitProps) => {
+    setLoading(true);
     const { email, password } = values;
     const loginUser = { email, password };
     loginUserApi(loginUser)
       .then((response) => {
         dispatch(setLogin({ user: response }));
         onSubmitProps.resetForm();
+        setLoading(false);
         navigate("/home");
       })
       .catch((error) => {
+        setLoading(false);
         setErrorMessage(error.response.data.msg);
       });
   };
@@ -257,7 +262,13 @@ const Form = () => {
                 "&:hover": { color: palette.primary.main },
               }}
             >
-              {isLogin ? "LOGIN" : "REGISTER"}
+              {isLogin
+                ? loading
+                  ? "LOGGING IN"
+                  : "LOGIN"
+                : loading
+                ? "REGISTERING"
+                : "REGISTER"}
             </Button>
             <Typography
               onClick={() => {

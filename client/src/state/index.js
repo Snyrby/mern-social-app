@@ -7,6 +7,7 @@ const initialState = {
   posts: [],
   error: null,
   comments: [],
+  alert: null,
 };
 
 export const authSlice = createSlice({
@@ -18,11 +19,9 @@ export const authSlice = createSlice({
     },
     setLogin: (state, action) => {
       state.user = action.payload.user;
-      // state.token = action.payload.token;
     },
     setLogout: (state) => {
       state.user = null;
-      // state.token = null;
     },
     setFriends: (state, action) => {
       if (state.user) {
@@ -68,6 +67,9 @@ export const authSlice = createSlice({
         }
       });
     },
+    setAlert: (state, action) => {
+      state.alert = action.payload.alert;
+    },
   },
 });
 
@@ -82,5 +84,6 @@ export const {
   setError,
   setComments,
   deleteComment,
+  setAlert,
 } = authSlice.actions;
 export default authSlice.reducer;

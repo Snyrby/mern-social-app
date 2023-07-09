@@ -1,16 +1,24 @@
-import { Box, useMediaQuery, useTheme, Typography } from "@mui/material";
+import { Box, useMediaQuery, useTheme, Typography, Alert } from "@mui/material";
 import React from "react";
 import { Form } from "../components"
+import { useSelector } from "react-redux";
 
 const LoginPage = () => {
   const theme = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const alert = useSelector((state) => state?.alert);
+  console.log(alert);
   return (
     <Box>
       <Box width="100%" backgroundColor={theme.palette.background.alt} p="1rem 6%">
         <Typography fontWeight="bold" fontSize="32px" color="primary">
           Sociopedia
         </Typography>
+        {alert ? (
+              <Alert variant="outlined" severity="info" sx={{position: "absolute"}}>
+                {alert}
+              </Alert>
+            ) : null}
       </Box>
       <Box width={isNonMobileScreens ? "50%" : "93%"} 
       p="2rem"
