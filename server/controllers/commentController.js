@@ -55,9 +55,13 @@ const deleteComment = async (req, res) => {
   if (!post) {
     throw new CustomError.NotFoundError(`No comment with id : ${postId}`);
   }
-  if (userId !== comment.user.toString() && userId !== post.user.toString()) {
+  if (
+    req.user.role === "admin" &&
+    userId !== comment.user.toString() &&
+    userId !== post.user.toString()
+  ) {
     throw new CustomError.UnauthorizedError(
-      'Not authorized to access this route'
+      "Not authorized to access this route"
     );
   }
   await comment.deleteOne();

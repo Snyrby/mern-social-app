@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
-import { FlexBetween, FlexCenter } from "../style";
+import { FlexBetween, FlexCenter, FlexStart } from "../style";
 import { registerUserApi, loginUserApi } from "../api/auth";
 import { useDispatch } from "react-redux";
 import { setAlert, setLogin } from "../state";
@@ -42,11 +42,6 @@ const registerSchema = yup.object().shape({
   picture: yup.string().required("A profile picture is required"),
 });
 
-const loginSchema = yup.object().shape({
-  email: yup.string().required("Email is required"),
-  password: yup.string().required("Password is required"),
-});
-
 const initialValuesRegister = {
   firstName: "",
   lastName: "",
@@ -62,7 +57,14 @@ const initialValuesLogin = {
   password: "",
 };
 
-const Form = () => {
+const Form = ({
+  inputFields,
+  image,
+  buttonName,
+  loadingButtonName,
+  schema,
+  initialValues,
+}) => {
   const [loading, setLoading] = useState(false);
   const [PageType, setPageType] = useState("login");
   const { palette } = useTheme();
@@ -83,8 +85,8 @@ const Form = () => {
     registerUserApi(formData)
       .then((response) => {
         console.log(response);
-        onSubmitProps.resetForm();
         dispatch(setAlert({ alert: response }));
+        onSubmitProps.resetForm();
         setLoading(false);
         setPageType("login");
       })
@@ -118,8 +120,8 @@ const Form = () => {
   return (
     <Formik
       onSubmit={handleFormSubmit}
-      initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-      validationSchema={isLogin ? loginSchema : registerSchema}
+      initialValues={initialValues}
+      validationSchema={schema}
     >
       {({
         values,
@@ -132,29 +134,35 @@ const Form = () => {
         resetForm,
       }) => (
         <form onSubmit={handleSubmit}>
-          <Box
+          <FlexStart flexDirection="column" width="100%">
+            {/* <Box
             display="grid"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr)"
             sx={{
               "& > div": { gridColumns: isNonMobile ? undefined : "span 4" },
             }}
-          >
-            {isRegister && (
-              <>
+          > */}
+            <>
+              {inputFields.map((field, i) => {
+                {
+                  console.log(field);
+                }
                 <TextField
-                  name="firstName"
-                  label="First Name"
+                  name={field.name}
+                  label={field.label}
                   onBlur={handleBlur}
-                  value={values.firstName}
+                  value={values.field.name}
                   onChange={handleChange}
-                  errors={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
-                  helperText={touched.firstName && errors.firstName}
-                  sx={{ gridColumn: "span 2" }}
-                />
-                <TextField
+                  // errors={
+                  //   Boolean(touched.field.name) && Boolean(errors.field.name)
+                  // }
+                  // helperText={touched.field.name && errors.field.name}
+                  sx={{ width: "100%" }}
+                />;
+              })}
+            </>
+            {/* <TextField
                   name="lastName"
                   label="Last Name"
                   onBlur={handleBlur}
@@ -162,7 +170,7 @@ const Form = () => {
                   onChange={handleChange}
                   errors={Boolean(touched.lastName) && Boolean(errors.lastName)}
                   helperText={touched.lastName && errors.lastName}
-                  sx={{ gridColumn: "span 2" }}
+                  // sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
                   name="location"
@@ -172,7 +180,7 @@ const Form = () => {
                   onChange={handleChange}
                   errors={Boolean(touched.location) && Boolean(errors.location)}
                   helperText={touched.location && errors.location}
-                  sx={{ gridColumn: "span 4" }}
+                  // sx={{ gridColumn: "span 4" }}
                 />
                 <TextField
                   name="occupation"
@@ -184,7 +192,7 @@ const Form = () => {
                     Boolean(touched.occupation) && Boolean(errors.occupation)
                   }
                   helperText={touched.occupation && errors.occupation}
-                  sx={{ gridColumn: "span 4" }}
+                  // sx={{ gridColumn: "span 4" }}
                 />
                 <Box
                   gridColumn="span 4"
@@ -218,7 +226,6 @@ const Form = () => {
                   </Dropzone>
                 </Box>
               </>
-            )}
             <TextField
               name="email"
               label="Email"
@@ -227,7 +234,7 @@ const Form = () => {
               onChange={handleChange}
               errors={Boolean(touched.email) && Boolean(errors.email)}
               helperText={touched.email && errors.email}
-              sx={{ gridColumn: "span 4" }}
+              // sx={{ gridColumn: "span 4" }}
             />
             <TextField
               name="password"
@@ -238,58 +245,59 @@ const Form = () => {
               onChange={handleChange}
               errors={Boolean(touched.password) && Boolean(errors.password)}
               helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
-            />
-          </Box>
+              // sx={{ gridColumn: "span 4" }}
+            /> */}
+            {/* </Box> */}
 
-          {/* Buttons */}
-          <Box>
-            {errorMessage && (
-              <FlexCenter m="1rem 0 0">
-                <Typography color="red" variant="h6">
-                  {errorMessage}
-                </Typography>
-              </FlexCenter>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              sx={{
-                m: errorMessage ? "1rem 0" : "2rem 0",
-                p: "1rem",
-                backgroundColor: palette.primary.main,
-                color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
-              }}
-            >
-              {isLogin
-                ? loading
-                  ? "LOGGING IN"
-                  : "LOGIN"
-                : loading
-                ? "REGISTERING"
-                : "REGISTER"}
-            </Button>
-            <Typography
-              onClick={() => {
-                setPageType(isLogin ? "register" : "login");
-                setErrorMessage("");
-                resetForm();
-              }}
-              sx={{
-                textDecoration: "underline",
-                color: palette.primary.main,
-                "&:hover": {
-                  cursor: "pointer",
-                  color: palette.primary.light,
-                },
-              }}
-            >
-              {isLogin
-                ? "Don't have an account? Sign Up here."
-                : "Already have an account? Login here."}
-            </Typography>
-          </Box>
+            {/* Buttons */}
+            <Box>
+              {errorMessage && (
+                <FlexCenter m="1rem 0 0">
+                  <Typography color="red" variant="h6">
+                    {errorMessage}
+                  </Typography>
+                </FlexCenter>
+              )}
+              <Button
+                type="submit"
+                fullWidth
+                sx={{
+                  m: errorMessage ? "1rem 0" : "2rem 0",
+                  p: "1rem",
+                  backgroundColor: palette.primary.main,
+                  color: palette.background.alt,
+                  "&:hover": { color: palette.primary.main },
+                }}
+              >
+                {isLogin
+                  ? loading
+                    ? "LOGGING IN"
+                    : "LOGIN"
+                  : loading
+                  ? "REGISTERING"
+                  : "REGISTER"}
+              </Button>
+              <Typography
+                onClick={() => {
+                  setPageType(isLogin ? "register" : "login");
+                  setErrorMessage("");
+                  resetForm();
+                }}
+                sx={{
+                  textDecoration: "underline",
+                  color: palette.primary.main,
+                  "&:hover": {
+                    cursor: "pointer",
+                    color: palette.primary.light,
+                  },
+                }}
+              >
+                {isLogin
+                  ? "Don't have an account? Sign Up here."
+                  : "Already have an account? Login here."}
+              </Typography>
+            </Box>
+          </FlexStart>
         </form>
       )}
     </Formik>

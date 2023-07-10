@@ -11,7 +11,8 @@ export const userLogoutApi = async () => {
 
 export const registerUserApi = async (formData) => {
   const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
-  return data;
+  console.log(data);
+  return data.msg;
 };
 
 export const loginUserApi = async (loginUser) => {
