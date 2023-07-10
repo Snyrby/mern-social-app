@@ -1,16 +1,40 @@
 import { Box, useMediaQuery, useTheme, Typography, Alert } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Form } from "../components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginForm } from "../constants";
 import * as yup from "yup";
+import { setError, setLogin } from "../state";
+import { loginUserApi } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const theme = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const alert = useSelector((state) => state?.alert);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   console.log(alert);
 
+  const login = async (values, onSubmitProps) => {
+    setLoading(true);
+    const { email, password } = values;
+    const loginUser = { email, password };
+    loginUserApi(loginUser)
+      .then((response) => {
+        dispatch(setLogin({ user: response }));
+        onSubmitProps.resetForm();
+        setLoading(false);
+        dispatch(setError({error: null}));
+        navigate("/home");
+      })
+      .catch((error) => {
+        setLoading(false);
+        dispatch(setError({error: error.response.data.msg}));
+      });
+  };
+  
   const initialValuesLogin = {
     email: "",
     password: "",
@@ -54,10 +78,12 @@ const LoginPage = () => {
         <Form
           initialValues={initialValuesLogin}
           schema={loginSchema}
-          inputFields={loginForm}
-          image
+          inputFields={loginForm}          
           buttonName="Login"
-          loadingButtonName="Logging In"
+          loadingButtonName="Logging In..."
+          submit={login}
+          loading={loading}
+          login
         />
       </Box>
     </Box>
