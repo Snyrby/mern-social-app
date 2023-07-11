@@ -57,13 +57,13 @@ const Form = ({
                   key={i}
                   name={field.name}
                   label={field.label}
-                  type={field.name === "password" && "password"}
+                  type={field.name === "password" ? "password" : undefined}
                   onBlur={handleBlur}
                   value={values[field.name]}
                   onChange={handleChange}
                   errors={
-                    Boolean(touched[field.name]) &&
-                    Boolean(errors[field.name])
+                    touched[field.name] &&
+                    errors[field.name]
                   }
                   helperText={
                     touched[field.name] &&
@@ -76,7 +76,8 @@ const Form = ({
                 />
               ) : (
                 <Dropzone
-                  accept=".jpg, .png, .jpeg"
+                  key={i}
+                  accept={String["image/jpg", "image/jpeg", "image/png"]}
                   multiple={false}
                   onDrop={(accept) => setFieldValue("picture", accept[0])}
                 >

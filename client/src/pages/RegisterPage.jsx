@@ -60,19 +60,18 @@ const RegisterPage = () => {
     }
     formData.append("picturePath", values.picture.name);
     registerUserApi(formData)
-      .then((response) => {
-        console.log(response);
-        onSubmitProps.resetForm()
-        setMessage(response);
-          // dispatch(setError({error: null}));
-          // setLoading(false);
-        navigate("/", { replace: true });
-        // dispatch(setAlert({ alert: response }));
-      })
-      .catch((error) => {
-        setLoading(false);
-        dispatch(setError({error: error.response.data.msg}));
-      });
+    //   .then((response) => {
+    //     console.log(response.json());
+    //     // onSubmitProps.resetForm()
+    //     // dispatch(setError({error: null}));
+    //     // setLoading(false);
+    //     // navigate("/");
+    //     // dispatch(setAlert({ alert: response }));
+    //   })
+    //   .catch((error) => {
+    //     setLoading(false);
+    //     dispatch(setError({error: error.response.data.msg}));
+    //   });
   };
   return (
     <Box>
