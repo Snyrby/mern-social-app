@@ -38,4 +38,15 @@ export const registerForm = [
     label: "Password",
     name: "password",
   },
+  {
+    label: "Confirm Password",
+    name: "confirmPassword",
+  },
 ];
+
+export const forgotPasswordForm = [
+  {
+    label: "Email",
+    name: "email",
+  },
+]

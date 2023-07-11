@@ -4,6 +4,7 @@ import ProfilePage from "./ProfilePage";
 import ProtectedRoute from "./ProtectedRoute";
 import VerifyEmailPage from "./VerifyEmailPage";
 import RegisterPage from "./RegisterPage";
+import ForgotPasswordPage from "./ForgotPasswordPage";
 
 export {
   HomePage,
@@ -12,4 +13,5 @@ export {
   ProtectedRoute,
   VerifyEmailPage,
   RegisterPage,
+  ForgotPasswordPage,
 };

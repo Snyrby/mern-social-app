@@ -16,13 +16,20 @@ export const registerUserApi = async (formData) => {
 };
 
 export const loginUserApi = async (loginUser) => {
-    const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
-    return data.user;
+  const { data } = await axios.post(`${url}/api/v1/auth/login`, loginUser);
+  return data.user;
 };
 
 export const verifyEmailApi = async (email, verificationToken) => {
-  const { data } = await axios.post('/api/v1/auth/verify-email', {
+  const { data } = await axios.post(`${url}/api/v1/auth/verify-email`, {
     verificationToken,
+    email,
+  });
+  return data.msg;
+};
+
+export const forgotPasswordApi = async (email) => {
+  const { data } = await axios.post(`${url}/api/v1/auth/forgot-password`, {
     email,
   });
   return data.msg;

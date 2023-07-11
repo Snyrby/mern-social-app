@@ -1,13 +1,12 @@
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { registerUserApi } from '../api/auth';
-import { setAlert, setError } from '../state';
-import { Form } from '../components';
-import { registerForm } from '../constants';
-
+import { registerUserApi } from "../api/auth";
+import { setAlert, setError } from "../state";
+import { Form } from "../components";
+import { registerForm } from "../constants";
 
 const RegisterPage = () => {
   const theme = useTheme();
@@ -15,7 +14,6 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [message, setMessage] = useState("");
 
   const registerSchema = yup.object().shape({
     firstName: yup
@@ -37,11 +35,15 @@ const RegisterPage = () => {
       .string()
       .required("A password is required")
       .min(6, "Password must be at least 6 characters"),
+    confirmPassword: yup
+      .string()
+      .required("A password is required")
+      .min(6, "Password must be at least 6 characters"),
     location: yup.string().required("Location is required"),
     occupation: yup.string().required("Occupation is required"),
     picture: yup.string().required("A profile picture is required"),
   });
-  
+
   const initialValuesRegister = {
     firstName: "",
     lastName: "",
@@ -50,28 +52,43 @@ const RegisterPage = () => {
     location: "",
     occupation: "",
     picture: "",
+    confirmPassword: "",
   };
-  
-  const register = (values, onSubmitProps) => {
-    setLoading(true);
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
+
+  const register = async (values, onSubmitProps) => {
+    if (values.password === values.confirmPassword) {
+      setLoading(true);
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      await registerUserApi(formData)
+        .then((response) => {
+          dispatch(setAlert({ alert: response }));
+          dispatch(setError({ error: null }));
+          setLoading(false);
+          onSubmitProps.resetForm();
+          onSubmitProps.setSubmitting(false);
+          window.location.replace("/");
+        })
+        // .then(() => dispatch(setError({ error: null })))
+        // .then(() => setLoading(false))
+        // .then(() => onSubmitProps.setSubmitting(false))
+        // .then(() => window.location.replace("/"))
+        .catch((error) => {
+          setLoading(false);
+          dispatch(setError({ error: error.response.data.msg }));
+          onSubmitProps.setSubmitting(false);
+        });
+    } else {
+      setLoading(false);
+      dispatch(
+        setError({ error: "Passwords do not match. Please try again." })
+      );
+      onSubmitProps.setFieldValue("password", "");
+      onSubmitProps.setFieldValue("confirmPassword", "");
+      onSubmitProps.setSubmitting(false);
     }
-    formData.append("picturePath", values.picture.name);
-    registerUserApi(formData)
-    //   .then((response) => {
-    //     console.log(response.json());
-    //     // onSubmitProps.resetForm()
-    //     // dispatch(setError({error: null}));
-    //     // setLoading(false);
-    //     // navigate("/");
-    //     // dispatch(setAlert({ alert: response }));
-    //   })
-    //   .catch((error) => {
-    //     setLoading(false);
-    //     dispatch(setError({error: error.response.data.msg}));
-    //   });
   };
   return (
     <Box>
@@ -83,7 +100,7 @@ const RegisterPage = () => {
         <Typography fontWeight="bold" fontSize="32px" color="primary">
           Sociopedia
         </Typography>
-        </Box>
+      </Box>
       <Box
         width={isNonMobileScreens ? "50%" : "93%"}
         p="2rem"
@@ -106,7 +123,7 @@ const RegisterPage = () => {
         />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
 export default RegisterPage;

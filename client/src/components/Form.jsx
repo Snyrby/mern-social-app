@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { FlexBetween, FlexCenter, FlexStart } from "../style";
 import { useDispatch, useSelector } from "react-redux";
-import { setError } from "../state";
+import { setAlert, setError } from "../state";
 
 const Form = ({
   inputFields,
@@ -24,20 +24,23 @@ const Form = ({
   loading,
   login,
   register,
+  forgot
 }) => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const error = useSelector((state) => state?.error);
 
-  const handleFormSubmit = async (values, onSubmitProps) => {
-    await submit(values, onSubmitProps);
+  const handleFormSubmit = (values, onSubmitProps) => {
+    submit(values, onSubmitProps);
   };
   return (
     <Formik
       onSubmit={handleFormSubmit}
       initialValues={initialValues}
       validationSchema={schema}
+      enableReinitialize={false}
+      validateOnMount={true}
     >
       {({
         values,
@@ -48,6 +51,8 @@ const Form = ({
         handleSubmit,
         setFieldValue,
         resetForm,
+        isSubmitting,
+        isValid,
       }) => (
         <form onSubmit={handleSubmit}>
           <FlexStart flexDirection="column" width="100%">
@@ -57,7 +62,7 @@ const Form = ({
                   key={i}
                   name={field.name}
                   label={field.label}
-                  type={field.name === "password" ? "password" : undefined}
+                  type={field.name === "password" || field.name === "confirmPassword" ? "password" : undefined}
                   onBlur={handleBlur}
                   value={values[field.name]}
                   onChange={handleChange}
@@ -115,6 +120,7 @@ const Form = ({
             {/* Buttons */}
             <FlexCenter flexDirection="column" width="100%">
               <Button
+                disabled={!isValid || isSubmitting}
                 type="submit"
                 fullWidth
                 sx={{
@@ -130,6 +136,7 @@ const Form = ({
               <Typography
                 onClick={() => {
                   dispatch(setError({ error: null }));
+                  dispatch(setAlert({ alert: null }));
                   resetForm();
                   {login && navigate("/register")}
                   {register && navigate("/")}
@@ -146,11 +153,13 @@ const Form = ({
                 {login && ("Don't have an account? Sign Up here.")}
                 {register && ("Have an account? Log In here.")}
               </Typography>
+              
               <Typography
                 onClick={() => {
+                  dispatch(setAlert({ alert: null }));
                   dispatch(setError({ error: null }));
                   resetForm();
-                  navigate("/reset-password");
+                  {!forgot ? navigate("/forgot-password") : navigate("/")};
                 }}
                 sx={{
                   textDecoration: "underline",
@@ -161,7 +170,7 @@ const Form = ({
                   },
                 }}
               >
-                Forgot Password? Reset Here.
+                {!forgot ? "Forgot Password? Reset Here." : "Back to Login?"}
               </Typography>
             </FlexCenter>
           </FlexStart>

@@ -4,7 +4,7 @@ import { Form } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { loginForm } from "../constants";
 import * as yup from "yup";
-import { setError, setLogin } from "../state";
+import { setAlert, setError, setLogin } from "../state";
 import { loginUserApi } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +15,8 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(alert);
 
-  const login = async (values, onSubmitProps) => {
+  const login = (values, onSubmitProps) => {
     setLoading(true);
     const { email, password } = values;
     const loginUser = { email, password };
@@ -27,11 +26,14 @@ const LoginPage = () => {
         onSubmitProps.resetForm();
         setLoading(false);
         dispatch(setError({error: null}));
+        dispatch(setAlert({alert: null}));
+        onSubmitProps.setSubmitting(false);
         navigate("/home");
       })
       .catch((error) => {
         setLoading(false);
         dispatch(setError({error: error.response.data.msg}));
+        onSubmitProps.setSubmitting(false);
       });
   };
   
@@ -59,9 +61,13 @@ const LoginPage = () => {
           <Alert
             variant="outlined"
             severity="info"
-            sx={{ position: "absolute" }}
+            sx={{borderColor: "primary", "& .MuiAlert-icon": {
+              color: "primary"
+            }}}
           >
-            {alert}
+            <Typography >
+              {alert}
+            </Typography>
           </Alert>
         ) : null}
       </Box>
