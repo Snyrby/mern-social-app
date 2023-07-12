@@ -32,19 +32,7 @@ const register = async (req, res) => {
   const role = isFirstAccount ? "admin" : "user";
 
   const verificationToken = crypto.randomBytes(40).toString("hex");
-  if (!req.files) {
-    throw new CustomError.BadRequestError("No image has been uploaded");
-  }
-  const userImage = req.files.picture;
-  if (!userImage.mimetype.startsWith("image")) {
-    throw new CustomError.BadRequestError("Please upload an image");
-  }
-  const maxSize = 1024 * 1024 * 5;
-  if (userImage.size > maxSize) {
-    throw new CustomError.BadRequestError("Please upload an image smaller than 5MB");
-  }
-  const imagePathAbsolute = path.join(__dirname, "../../client/public/" + `${userImage.name}`);
-  await userImage.mv(imagePathAbsolute);
+  
   const user = await User.create({
     firstName,
     lastName,
@@ -54,7 +42,7 @@ const register = async (req, res) => {
     verificationToken,
     location,
     occupation,
-    picturePath: userImage.name,
+    picturePath: "test",
     friends,
   });
   const origin = "http://localhost:3000";
@@ -178,10 +166,28 @@ const forgotPassword = async (req, res) => {
     .json({ msg: "Please check your email for a reset password link" });
 };
 
+const imageUpload = async (req, res) => {
+  if (!req.files) {
+    throw new CustomError.BadRequestError("No image has been uploaded");
+  }
+  const userImage = req.files.picture;
+  if (!userImage.mimetype.startsWith("image")) {
+    throw new CustomError.BadRequestError("Please upload an image");
+  }
+  const maxSize = 1024 * 1024 * 5;
+  if (userImage.size > maxSize) {
+    throw new CustomError.BadRequestError("Please upload an image smaller than 5MB");
+  }
+  const imagePathAbsolute = path.join(__dirname, "../../client/public/" + `${userImage.name}`);
+  await userImage.mv(imagePathAbsolute);
+  res.status(StatusCodes.OK).json({ image: `${userImage.name}` });
+};
+
 module.exports = {
   register,
   verifyEmail,
   login,
   logout,
   forgotPassword,
+  imageUpload,
 };

@@ -11,7 +11,6 @@ export const userLogoutApi = async () => {
 
 export const registerUserApi = async (formData) => {
   const { data } = await axios.post(`${url}/api/v1/auth/register`, formData);
-  console.log(data);
   return data.msg;
 };
 
@@ -33,4 +32,9 @@ export const forgotPasswordApi = async (email) => {
     email,
   });
   return data.msg;
+};
+
+export const userImageUploadApi = async (formData) => {
+  const { data } = await axios.post(`${url}/api/v1/auth/image-upload`, formData);
+  return data.image;
 };

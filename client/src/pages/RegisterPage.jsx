@@ -58,28 +58,30 @@ const RegisterPage = () => {
   const register = async (values, onSubmitProps) => {
     if (values.password === values.confirmPassword) {
       setLoading(true);
+      console.log(values);
       const formData = new FormData();
       for (let value in values) {
         formData.append(value, values[value]);
       }
-      await registerUserApi(formData)
-        .then((response) => {
-          dispatch(setAlert({ alert: response }));
-          dispatch(setError({ error: null }));
-          setLoading(false);
-          onSubmitProps.resetForm();
-          onSubmitProps.setSubmitting(false);
-          window.location.replace("/");
-        })
+
+      // await registerUserApi(formData)
+      //   .then((response) => {
+      //     dispatch(setAlert({ alert: response }));
+      //     dispatch(setError({ error: null }));
+      //     setLoading(false);
+      //     onSubmitProps.resetForm();
+      //     onSubmitProps.setSubmitting(false);
+      //     window.location.replace("/");
+      //   })
         // .then(() => dispatch(setError({ error: null })))
         // .then(() => setLoading(false))
         // .then(() => onSubmitProps.setSubmitting(false))
         // .then(() => window.location.replace("/"))
-        .catch((error) => {
-          setLoading(false);
-          dispatch(setError({ error: error.response.data.msg }));
-          onSubmitProps.setSubmitting(false);
-        });
+        // .catch((error) => {
+        //   setLoading(false);
+        //   dispatch(setError({ error: error.response.data.msg }));
+        //   onSubmitProps.setSubmitting(false);
+        // });
     } else {
       setLoading(false);
       dispatch(
