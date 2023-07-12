@@ -34,7 +34,11 @@ export const forgotPasswordApi = async (email) => {
   return data.msg;
 };
 
-export const userImageUploadApi = async (formData) => {
-  const { data } = await axios.post(`${url}/api/v1/auth/image-upload`, formData);
-  return data.image;
+export const resetPasswordApi = async (email, token, password) => {
+  const { data } = await axios.post(`${url}/api/v1/auth/reset-password`, {
+    email,
+    token,
+    password,
+  });
+  return data.msg;
 };

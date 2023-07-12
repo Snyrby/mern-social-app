@@ -1,6 +1,16 @@
 import { React, useMemo } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ForgotPasswordPage, HomePage, LoginPage, ProfilePage, ProtectedRoute, RegisterPage, VerifyEmailPage } from "./pages";
+import {
+  EditProfilePage,
+  ForgotPasswordPage,
+  HomePage,
+  LoginPage,
+  ProfilePage,
+  ProtectedRoute,
+  RegisterPage,
+  ResetPasswordPage,
+  VerifyEmailPage,
+} from "./pages";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
@@ -21,9 +31,11 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route exact path="/home" element={<HomePage />} />
               <Route path="/profile/:userId" element={<ProfilePage />} />
+              <Route path="/profile/edit/:userId" element={<EditProfilePage />} />
             </Route>
             <Route path="/user/verify-email" element={<VerifyEmailPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/error/:code" element={<ErrorHandler />} />
             <Route
               path="*"

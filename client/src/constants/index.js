@@ -49,4 +49,38 @@ export const forgotPasswordForm = [
     label: "Email",
     name: "email",
   },
-]
+];
+
+export const resetPasswordForm = [
+  {
+    label: "Password",
+    name: "password",
+  },
+  {
+    label: "Confirm Password",
+    name: "confirmPassword",
+  },
+];
+
+export const editProfileForm = [
+  {
+    label: "First Name",
+    name: "firstName",
+  },
+  {
+    label: "Last Name",
+    name: "lastName",
+  },
+  {
+    label: "Location",
+    name: "location",
+  },
+  {
+    label: "Occupation",
+    name: "occupation",
+  },
+  {
+    label: "Image",
+    name: "image",
+  },
+];

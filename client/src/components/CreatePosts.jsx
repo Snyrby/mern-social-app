@@ -191,7 +191,7 @@ const CreatePosts = ({ picturePath }) => {
                   )}
                 </FlexBetween>
               )}
-              <CustomButton values={values} text="Create Post" />
+              <CustomButton disabled={!values.description} text="Create Post" />
             </FlexBetween>
             {!isNonMobileScreens && !mobileMenu ? (
               <>

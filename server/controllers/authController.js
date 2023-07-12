@@ -2,7 +2,7 @@ const User = require("../models/User");
 const Token = require("../models/Token");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const path = require('path');
+const path = require("path");
 const {
   attachCookiesToResponse,
   createTokenUser,
@@ -32,7 +32,26 @@ const register = async (req, res) => {
   const role = isFirstAccount ? "admin" : "user";
 
   const verificationToken = crypto.randomBytes(40).toString("hex");
-  
+
+  if (!req.files) {
+    throw new CustomError.BadRequestError("No image has been uploaded");
+  }
+  const userImage = req.files.picture;
+  if (!userImage.mimetype.startsWith("image")) {
+    throw new CustomError.BadRequestError("Please upload an image");
+  }
+  const maxSize = 1024 * 1024 * 10;
+  if (userImage.size > maxSize) {
+    throw new CustomError.BadRequestError(
+      "Please upload an image smaller than 10MB"
+    );
+  }
+  const imagePathAbsolute = path.join(
+    __dirname,
+    "../../client/src/assets/" + `${userImage.name}`
+  );
+  await userImage.mv(imagePathAbsolute);
+
   const user = await User.create({
     firstName,
     lastName,
@@ -42,7 +61,7 @@ const register = async (req, res) => {
     verificationToken,
     location,
     occupation,
-    picturePath: "test",
+    picturePath: userImage.name,
     friends,
   });
   const origin = "http://localhost:3000";
@@ -82,8 +101,8 @@ const login = async (req, res) => {
     throw new CustomError.BadRequestError("Please provide email and password");
   }
   const user = await User.findOne({ email }).populate({
-    path:"friends",
-    select:"firstName lastName picturePath occupation",
+    path: "friends",
+    select: "firstName lastName picturePath occupation",
   });
 
   if (!user) {
@@ -157,7 +176,7 @@ const forgotPassword = async (req, res) => {
     });
     const tenMinutes = 1000 * 60 * 10;
     const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
-    user.passwordToken = passwordToken;
+    user.passwordToken = createHash(passwordToken);
     user.passwordTokenExpirationDate = passwordTokenExpirationDate;
     await user.save();
   }
@@ -166,21 +185,30 @@ const forgotPassword = async (req, res) => {
     .json({ msg: "Please check your email for a reset password link" });
 };
 
-const imageUpload = async (req, res) => {
-  if (!req.files) {
-    throw new CustomError.BadRequestError("No image has been uploaded");
+const resetPassword = async (req, res) => {
+  const { token, email, password } = req.body;
+  if (!token || !email || !password) {
+    throw new CustomError.BadRequestError("Please provide all values");
   }
-  const userImage = req.files.picture;
-  if (!userImage.mimetype.startsWith("image")) {
-    throw new CustomError.BadRequestError("Please upload an image");
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const currentDate = new Date();
+
+    if (
+      user.passwordToken === createHash(token) &&
+      user.passwordTokenExpirationDate > currentDate
+    ) {
+      user.password = password;
+      user.passwordToken = null;
+      user.passwordTokenExpirationDate = null;
+      await user.save();
+    }
   }
-  const maxSize = 1024 * 1024 * 5;
-  if (userImage.size > maxSize) {
-    throw new CustomError.BadRequestError("Please upload an image smaller than 5MB");
-  }
-  const imagePathAbsolute = path.join(__dirname, "../../client/public/" + `${userImage.name}`);
-  await userImage.mv(imagePathAbsolute);
-  res.status(StatusCodes.OK).json({ image: `${userImage.name}` });
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "Password has been successfully reset" });
 };
 
 module.exports = {
@@ -189,5 +217,5 @@ module.exports = {
   login,
   logout,
   forgotPassword,
-  imageUpload,
+  resetPassword,
 };

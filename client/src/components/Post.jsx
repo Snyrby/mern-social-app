@@ -46,14 +46,16 @@ const Post = ({
 
   const commentClickHandler = () => {
     setIsComment(!isComment);
-    getCommentsApi(postId)
-      .then((response) => {
-        dispatch(setComments({ comments: response }));
-      })
-      .catch((error) => {
-        dispatch(setError({ error: error.response.data.msg }));
-        return navigate(`/error/${error.request.status}`);
-      });
+    if (isComment === false) {
+      getCommentsApi(postId)
+        .then((response) => {
+          dispatch(setComments({ comments: response }));
+        })
+        .catch((error) => {
+          dispatch(setError({ error: error.response.data.msg }));
+          return navigate(`/error/${error.request.status}`);
+        });
+    }
   };
 
   const likeClickHandler = () => {

@@ -1,11 +1,9 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const {
-  createTokenUser,
-  createJWT,
-  checkPermissions,
-} = require("../utils");
+const { createTokenUser, checkPermissions, attachCookiesToResponse } = require("../utils");
+const fs = require("fs");
+const path = require("path");
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: "user" }).select("-password");
@@ -25,10 +23,12 @@ const showCurrentUser = async (req, res) => {
 };
 
 const getUserFriends = async (req, res) => {
-  const user = await User.findOne({ _id: req.params.id }).select("friends").populate({
-    path:"friends",
-    select:"firstName lastName picturePath occupation",
-  });
+  const user = await User.findOne({ _id: req.params.id })
+    .select("friends")
+    .populate({
+      path: "friends",
+      select: "firstName lastName picturePath occupation",
+    });
   if (!user) {
     throw new CustomError.NotFoundError(`No user with id : ${id}`);
   }
@@ -55,37 +55,66 @@ const addRemoveFriend = async (req, res) => {
   }
   await user.save();
   await friend.save();
-  const friendsList = await User.findOne({ _id: id }).select("friends").populate({
-    path: "friends",
-    select: "firstName lastName picturePath occupation",
-  });
+  const friendsList = await User.findOne({ _id: id })
+    .select("friends")
+    .populate({
+      path: "friends",
+      select: "firstName lastName picturePath occupation",
+    });
   res.status(StatusCodes.OK).json({ friends: friendsList.friends });
 };
 
-const uploadImage = async (req, res) => {
-  if (!req.files) {
-    throw new CustomError.BadRequestError("No File Uploaded");
+const updateUser = async (req, res) => {
+  const { firstName, lastName, location, occupation } = req.body;
+  if (!firstName || !lastName || !location || !occupation) {
+    throw new BadRequestError("Please provide all values");
   }
-  const productImage = req.files.image;
-
-  if (!productImage.mimetype.startsWith("image")) {
-    throw new CustomError.BadRequestError("Please Upload Image");
-  }
-
-  const maxSize = 1024 * 1024 * 10;
-
-  if (productImage.size > maxSize) {
-    throw new CustomError.BadRequestError(
-      "Please upload image smaller than 10MB"
+  let { picturePath } = req.user;
+  if (req.files) {
+    const userImage = req.files.picture;
+    if (!userImage.mimetype.startsWith("image")) {
+      throw new CustomError.BadRequestError("Please upload an image");
+    }
+    const maxSize = 1024 * 1024 * 10;
+    if (userImage.size > maxSize) {
+      throw new CustomError.BadRequestError(
+        "Please upload an image smaller than 10MB"
+      );
+    }
+    fs.unlink(
+      path.join(
+        __dirname,
+        "../../client/src/assets/" + `${req.user.picturePath}`
+      ), (err) => {
+        if (err) {
+          throw err;
+        }
+      }
     );
+    const imagePathAbsolute = path.join(
+      __dirname,
+      "../../client/src/assets/" + `${userImage.name}`
+    );
+    await userImage.mv(imagePathAbsolute);
+    picturePath = userImage.name;
   }
 
-  const imagePath = path.join(
-    __dirname,
-    "../public/uploads/" + `${productImage.name}`
+  console.log(picturePath);
+
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.userId },
+    {
+      firstName,
+      lastName,
+      occupation,
+      location,
+      picturePath,
+    },
+    { new: true, runValidators: true }
   );
-  await productImage.mv(imagePath);
-  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
+  const tokenUser = createTokenUser(user);
+  attachCookiesToResponse({ res, user: tokenUser });
+  res.status(StatusCodes.OK).json({user: tokenUser});
 };
 
 module.exports = {
@@ -94,5 +123,5 @@ module.exports = {
   showCurrentUser,
   getUserFriends,
   addRemoveFriend,
-  uploadImage,
+  updateUser,
 };

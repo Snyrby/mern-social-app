@@ -26,6 +26,7 @@ const VerifyEmailPage = () => {
         setMessage(response);
       })
       .catch((error) => {
+        setLoading(false);
         dispatch(setError({ error: error.response.data.msg }));
         return navigate(`/error/${error.request.status}`);
       });
@@ -33,7 +34,7 @@ const VerifyEmailPage = () => {
 
   useEffect(() => {
     verifyToken();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (loading) {
       return (

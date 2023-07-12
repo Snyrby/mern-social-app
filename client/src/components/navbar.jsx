@@ -47,11 +47,15 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const profileClick = () => {
+    navigate(`/profile/${user.userId}`);
+  };
+
   const handleClose = (event) => {
     if (anchorRef.current?.contains(event.target)) {
+      console.log(event.target);
       return;
     }
-
     setIsMenuToggled(false);
   };
 
@@ -127,61 +131,74 @@ const Navbar = () => {
           </Button>
         </Tooltip>
         {isMenuToggled && (
-          <ClickAwayListener onClickAway={handleClose}>
-            <Menu
-              open={open}
-              // autoFocusItem={isMenuToggled}
-              id="account-menu"
-              onKeyDown={handleListKeyDown}
-              anchorEl={isMenuToggled}
-              MenuListProps={{ "aria-labelledby": "menu-button" }}
-              onClose={handleClose}
+          // <ClickAwayListener onClickAway={handleClose}>
+          <Menu
+            open={open}
+            // autoFocusItem={isMenuToggled}
+            id="account-menu"
+            onKeyDown={handleListKeyDown}
+            anchorEl={isMenuToggled}
+            MenuListProps={{ "aria-labelledby": "menu-button" }}
+            onClose={handleClose}
+          >
+            <MenuItem
+              disabled
+              onClick={handleClose}
+              sx={{ textTransform: "capitalize" }}
             >
-              <MenuItem onClick={handleClose} sx={{textTransform:"capitalize"}}>{fullName}</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              {!isNonMobileScreens && (
-                <MenuItem onClick={() => dispatch(setMode())}>
-                  {theme.palette.mode === "dark" ? (
-                    <FlexCenter gap="0.57rem">
-                      <DarkMode sx={{ fontSize: "18px" }} />
-                      <Typography>Dark Mode</Typography>
-                    </FlexCenter>
-                  ) : (
-                    <FlexCenter gap="0.6rem">
-                      <LightMode sx={{ color: dark, fontSize: "18px" }} />
-                      <Typography color={dark}>Light Mode</Typography>
-                    </FlexCenter>
-                  )}
-                </MenuItem>
-              )}
-              {!isNonMobileScreens && (
-                <MenuItem>
-                  <Message sx={{ fontSize: "18px", marginRight:"5px" }} />
-                  <Typography color={dark}>Messages</Typography>
-                </MenuItem>
-              )}
-              {!isNonMobileScreens && (
-                <MenuItem>
-                  <Notifications sx={{ fontSize: "18px", marginRight:"5px" }} />
-                  <Typography color={dark}>Notifications</Typography>
-                </MenuItem>
-              )}
-              {!isNonMobileScreens && (
-                <MenuItem>
-                  <Help sx={{ fontSize: "18px", marginRight:"5px" }} />
-                  <Typography color={dark}>Help</Typography>
-                </MenuItem>
-              )}
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  logOut();
-                }}
-              >
-                Logout
+              {fullName}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                profileClick();
+              }}
+            >
+              Profile
+            </MenuItem>
+            {!isNonMobileScreens && (
+              <MenuItem onClick={() => dispatch(setMode())}>
+                {theme.palette.mode === "dark" ? (
+                  <FlexCenter gap="0.57rem">
+                    <DarkMode sx={{ fontSize: "18px" }} />
+                    <Typography>Dark Mode</Typography>
+                  </FlexCenter>
+                ) : (
+                  <FlexCenter gap="0.6rem">
+                    <LightMode sx={{ color: dark, fontSize: "18px" }} />
+                    <Typography color={dark}>Light Mode</Typography>
+                  </FlexCenter>
+                )}
               </MenuItem>
-            </Menu>
-          </ClickAwayListener>
+            )}
+            {!isNonMobileScreens && (
+              <MenuItem>
+                <Message sx={{ fontSize: "18px", marginRight: "5px" }} />
+                <Typography color={dark}>Messages</Typography>
+              </MenuItem>
+            )}
+            {!isNonMobileScreens && (
+              <MenuItem>
+                <Notifications sx={{ fontSize: "18px", marginRight: "5px" }} />
+                <Typography color={dark}>Notifications</Typography>
+              </MenuItem>
+            )}
+            {!isNonMobileScreens && (
+              <MenuItem>
+                <Help sx={{ fontSize: "18px", marginRight: "5px" }} />
+                <Typography color={dark}>Help</Typography>
+              </MenuItem>
+            )}
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                logOut();
+              }}
+            >
+              Logout
+            </MenuItem>
+          </Menu>
+          // </ClickAwayListener>
         )}
       </FlexBetween>
     </FlexBetween>

@@ -1,5 +1,6 @@
 import { Typography, useTheme } from "@mui/material";
 import { FlexBetween, WidgetWrapper } from "../style";
+import img from "../assets/info4.jpeg";
 
 const Advert = () => {
   const { palette } = useTheme();
@@ -18,7 +19,7 @@ const Advert = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="./info4.jpeg"
+        src={img}
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>

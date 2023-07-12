@@ -82,7 +82,7 @@ const AddComment = ({ postId, comments }) => {
           </FlexStart>
           {values.description && (
             <FlexEnd width="100%" m="1rem 0">
-              <CustomButton values={values} text="Comment" comment />
+              <CustomButton text="Comment" comment />
               <CustomButton text="Cancel" cancel comment />
             </FlexEnd>
           )}

@@ -1,11 +1,5 @@
-import { React } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { React, useEffect } from "react";
+import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +7,7 @@ import Dropzone from "react-dropzone";
 import { FlexBetween, FlexCenter, FlexStart } from "../style";
 import { useDispatch, useSelector } from "react-redux";
 import { setAlert, setError } from "../state";
+import CustomButton from "./CustomButton";
 
 const Form = ({
   inputFields,
@@ -24,7 +19,8 @@ const Form = ({
   loading,
   login,
   register,
-  forgot
+  forgot,
+  edit,
 }) => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
@@ -62,18 +58,17 @@ const Form = ({
                   key={i}
                   name={field.name}
                   label={field.label}
-                  type={field.name === "password" || field.name === "confirmPassword" ? "password" : undefined}
+                  type={
+                    field.name === "password" ||
+                    field.name === "confirmPassword"
+                      ? "password"
+                      : undefined
+                  }
                   onBlur={handleBlur}
                   value={values[field.name]}
                   onChange={handleChange}
-                  errors={
-                    touched[field.name] &&
-                    errors[field.name]
-                  }
-                  helperText={
-                    touched[field.name] &&
-                    errors[field.name]
-                  }
+                  errors={touched[field.name] && errors[field.name]}
+                  helperText={touched[field.name] && errors[field.name]}
                   sx={{
                     width: "100%",
                     marginBottom: i !== inputFields.length - 1 ? "20px" : 0,
@@ -82,7 +77,7 @@ const Form = ({
               ) : (
                 <Dropzone
                   key={i}
-                  accept={String["image/jpg", "image/jpeg", "image/png"]}
+                  accept={String[("image/jpg", "image/jpeg", "image/png")]}
                   multiple={false}
                   onDrop={(accept) => setFieldValue("picture", accept[0])}
                 >
@@ -119,7 +114,7 @@ const Form = ({
 
             {/* Buttons */}
             <FlexCenter flexDirection="column" width="100%">
-              <Button
+              {/* <Button
                 disabled={!isValid || isSubmitting}
                 type="submit"
                 fullWidth
@@ -132,14 +127,25 @@ const Form = ({
                 }}
               >
                 {loading ? loadingButtonName : buttonName}
-              </Button>
+              </Button> */}
+              <FlexCenter width="100%" m="1rem 0">
+                <CustomButton
+                  disabled={!isValid || isSubmitting}
+                  text= {loading ? loadingButtonName : buttonName}
+                />
+                {edit && <CustomButton form text="Cancel" cancel onClick={-1} />}
+              </FlexCenter>
               <Typography
                 onClick={() => {
                   dispatch(setError({ error: null }));
                   dispatch(setAlert({ alert: null }));
                   resetForm();
-                  {login && navigate("/register")}
-                  {register && navigate("/")}
+                  {
+                    login && navigate("/register");
+                  }
+                  {
+                    register && navigate("/");
+                  }
                 }}
                 sx={{
                   textDecoration: "underline",
@@ -150,28 +156,31 @@ const Form = ({
                   },
                 }}
               >
-                {login && ("Don't have an account? Sign Up here.")}
-                {register && ("Have an account? Log In here.")}
+                {login && "Don't have an account? Sign Up here."}
+                {register && "Have an account? Log In here."}
               </Typography>
-              
-              <Typography
-                onClick={() => {
-                  dispatch(setAlert({ alert: null }));
-                  dispatch(setError({ error: null }));
-                  resetForm();
-                  {!forgot ? navigate("/forgot-password") : navigate("/")};
-                }}
-                sx={{
-                  textDecoration: "underline",
-                  color: palette.primary.main,
-                  "&:hover": {
-                    cursor: "pointer",
-                    color: palette.primary.light,
-                  },
-                }}
-              >
-                {!forgot ? "Forgot Password? Reset Here." : "Back to Login?"}
-              </Typography>
+              {!edit && (
+                <Typography
+                  onClick={() => {
+                    dispatch(setAlert({ alert: null }));
+                    dispatch(setError({ error: null }));
+                    resetForm();
+                    {
+                      !forgot ? navigate("/forgot-password") : navigate("/");
+                    }
+                  }}
+                  sx={{
+                    textDecoration: "underline",
+                    color: palette.primary.main,
+                    "&:hover": {
+                      cursor: "pointer",
+                      color: palette.primary.light,
+                    },
+                  }}
+                >
+                  {!forgot ? "Forgot Password? Reset Here." : "Back to Login?"}
+                </Typography>
+              )}
             </FlexCenter>
           </FlexStart>
         </form>

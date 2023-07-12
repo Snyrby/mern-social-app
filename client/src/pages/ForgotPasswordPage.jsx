@@ -1,8 +1,8 @@
-import { Box, useMediaQuery, useTheme, Typography, Alert } from "@mui/material";
+import { Box, useMediaQuery, useTheme, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Form } from "../components";
 import { useDispatch } from "react-redux";
-import { forgotPasswordForm, loginForm } from "../constants";
+import { forgotPasswordForm } from "../constants";
 import * as yup from "yup";
 import { setAlert, setError } from "../state";
 import { useNavigate } from "react-router-dom";
