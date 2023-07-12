@@ -162,7 +162,7 @@ const forgotPassword = async (req, res) => {
     // send email
     const origin = "http://localhost:3000";
     await sendResetPasswordEmail({
-      name: user.name,
+      name: user.firstName,
       email: user.email,
       token: passwordToken,
       origin,
