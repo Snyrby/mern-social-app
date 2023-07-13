@@ -4,7 +4,14 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import { FlexBetween, UserImage, WidgetWrapper } from "../style";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +47,14 @@ const UserInfo = ({ userId, picturePath }) => {
     <WidgetWrapper>
       <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
-          <UserImage image={picturePath} />
+          <Tooltip title="Profile Page">
+            <IconButton
+              aria-label="Profile Page"
+              onClick={() => navigate(`/profile/${userId}`)}
+            >
+              <UserImage image={picturePath} />
+            </IconButton>
+          </Tooltip>
           <Box>
             <Typography
               variant="h4"
@@ -61,14 +75,21 @@ const UserInfo = ({ userId, picturePath }) => {
           </Box>
         </FlexBetween>
         {loggedInUserId === userId && (
-          <ManageAccountsOutlined
-            onClick={() => navigate(`/profile/edit/${userId}`)}
-            sx={{
-              "&:hover": {
-                cursor: "pointer",
-              },
-            }}
-          />
+          <Tooltip title="Edit Profile">
+            <IconButton
+              aria-label="Edit Profile"
+              onClick={() => navigate(`/profile/${userId}`)}
+            >
+              <ManageAccountsOutlined
+                onClick={() => navigate(`/profile/edit/${userId}`)}
+                sx={{
+                  "&:hover": {
+                    cursor: "pointer",
+                  },
+                }}
+              />
+            </IconButton>
+          </Tooltip>
         )}
       </FlexBetween>
       <Divider />

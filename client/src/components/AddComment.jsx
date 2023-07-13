@@ -1,6 +1,6 @@
 import React from "react";
 import { FlexEnd, FlexStart, UserImage } from "../style";
-import { Divider, InputBase, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, IconButton, InputBase, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +32,9 @@ const AddComment = ({ postId, comments }) => {
     const comment = { postId, userId, description: values.description };
     createCommentApi(comment)
       .then((response) => {
-        dispatch(setComments({ comments: [response, ...comments], postId: postId }));
+        dispatch(
+          setComments({ comments: [response, ...comments], postId: postId })
+        );
         onSubmitProps.resetForm();
       })
       .catch((error) => {
@@ -58,7 +60,15 @@ const AddComment = ({ postId, comments }) => {
       }) => (
         <form onSubmit={handleSubmit} onReset={resetForm}>
           <FlexStart m="1rem 0">
-            <UserImage image={picturePath} size="30px" />
+            <Tooltip title="Profile Page">
+              <IconButton
+                aria-label="Profile Page"
+                onClick={() => navigate(`/profile/${userId}`)}
+              >
+                <UserImage image={picturePath} size="30px" />
+              </IconButton>
+            </Tooltip>
+
             <FlexStart
               width="100%"
               ml="0.5rem"
@@ -72,6 +82,7 @@ const AddComment = ({ postId, comments }) => {
                 helperText={touched.description && errors.description}
                 onChange={handleChange}
                 sx={{
+                  mt:"10px",
                   width: "100%",
                   backgroundColor: "rgba(0, 0, 0, 0)",
                   borderRadius: "2rem",

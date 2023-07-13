@@ -17,6 +17,7 @@ import {
   Button,
   IconButton,
   useMediaQuery,
+  Tooltip,
 } from "@mui/material";
 import { FlexBetween, UserImage, WidgetWrapper } from "../style";
 import Dropzone from "react-dropzone";
@@ -88,7 +89,14 @@ const CreatePosts = ({ picturePath }) => {
         <form onSubmit={handleSubmit}>
           <WidgetWrapper>
             <FlexBetween gap="1.5rem">
-              <UserImage image={picturePath} />
+              <Tooltip title="Profile Page">
+                <IconButton
+                  aria-label="Profile Page"
+                  onClick={() => navigate(`/profile/${userId}`)}
+                >
+                  <UserImage image={picturePath} />
+                </IconButton>
+              </Tooltip>
               <InputBase
                 name="description"
                 placeholder="What's on your mind..."

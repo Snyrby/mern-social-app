@@ -44,7 +44,14 @@ const Comment = ({
       <FlexBetween width="100%">
         <FlexStart flexDirection="column" width="100%">
           <FlexStart flexDirection="row">
-            <UserImage image={picturePath} size="30px" />
+            <Tooltip title="Profile Page">
+              <IconButton
+                aria-label="Profile Page"
+                onClick={() => navigate(`/profile/${userId}`)}
+              >
+                <UserImage image={picturePath} size="30px" />
+              </IconButton>
+            </Tooltip>
             <Typography
               variant="h5"
               fontWeight="500"

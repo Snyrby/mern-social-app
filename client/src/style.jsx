@@ -29,6 +29,13 @@ export const WidgetWrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const UserImage = ({ image, size = "60px" }) => {
+  const userImage = (image) => {
+    try {
+      return require(`./assets/${image}`)
+    } catch (error) {
+      return require("./assets/avatar.svg");
+    }
+  }
   return (
     <Box width={size} height={size}>
       <img
@@ -36,7 +43,7 @@ export const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={require(`./assets/${image}`)}
+        src={userImage(image)}
       />
     </Box>
   );

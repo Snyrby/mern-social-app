@@ -53,8 +53,7 @@ const EditProfilePage = () => {
         setLoading(false);
         onSubmitProps.resetForm();
         onSubmitProps.setSubmitting(false);
-        // navigate("/home");
-        // window.location.reload(false);
+        navigate("/home");
       })
       .catch((error) => {
         setLoading(false);
