@@ -65,7 +65,7 @@ const EditProfilePage = () => {
 
   return (
     <Box>
-      {/* <Navbar /> */}
+      <Navbar />
       <Box
         width={isNonMobileScreens ? "50%" : "93%"}
         p="2rem"
